@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # coding: utf-8
-#from ensemble import *
+
+import pandas as pd
 import re
 import itertools,operator
 from elasticsearch import Elasticsearch
@@ -432,6 +433,37 @@ if __name__ == "__main__":
 
 '''
 
+dadata_LUT = {'original':'Исходный адрес',
+  'fullname':'Адрес',
+  'index':'Индекс',
+  'postalcode':'Индекс',
+  'country':'Страна',
+  'region_type':'Тип региона',
+  'region':'Регион',
+  'area_type':'Тип района',
+  'area':'Район',
+  'city_type':'Тип города',
+  'city':'Город',
+  '65_type':'Тип н/п',
+  '65':'Н/п',
+  '???':'Адм. округ',
+  'town':'Н/п',
+  'town_type':'Тип н/п',
+  'district_type':'Тип района',
+  'district':'Район города',
+  'street_type':'Тип улицы',
+  'street':'Улица',
+  'house_type':'Тип дома',
+#   'housenum':'Дом',
+#   'build_type':'Тип корпуса/строения',
+#   'buildnum':'Корпус/строение',
+#   'struc_type':'Тип корпуса/строения',
+#   'strucnum':'Корпус/строение',            
+  'flat_type':'Тип квартиры',
+  'flat_num':'Номер Квартиры',
+  'houseid':"Код ФИАС"
+}
+
 def score(ref, orig_col="Исходный адрес", func = get_addr, cols_to_score = ["Регион", "Город", "Н/п", "Район", "Улица", "Дом", "Корпус/строение"]):
   df_1 = func(ref[orig_col]).rename(index=str, columns=dadata_LUT)
   if 'Индекс' in cols_to_score:
@@ -476,37 +508,5 @@ def score_by_id(ref, orig_col="Исходный адрес", func = get_addr):
   print()
   print("Accuracy: {0:03.3f}%".format(accuracy))
 
-ref  = pd.read_excel('ref/sj.xlsx')
-ref2 = pd.read_excel('ref/references.xlsx')
-
-dadata_LUT = {'original':'Исходный адрес',
-  'fullname':'Адрес',
-  'index':'Индекс',
-  'postalcode':'Индекс',
-  'country':'Страна',
-  'region_type':'Тип региона',
-  'region':'Регион',
-  'area_type':'Тип района',
-  'area':'Район',
-  'city_type':'Тип города',
-  'city':'Город',
-  '65_type':'Тип н/п',
-  '65':'Н/п',
-  '???':'Адм. округ',
-  'town':'Н/п',
-  'town_type':'Тип н/п',
-  'district_type':'Тип района',
-  'district':'Район города',
-  'street_type':'Тип улицы',
-  'street':'Улица',
-  'house_type':'Тип дома',
-#   'housenum':'Дом',
-#   'build_type':'Тип корпуса/строения',
-#   'buildnum':'Корпус/строение',
-#   'struc_type':'Тип корпуса/строения',
-#   'strucnum':'Корпус/строение',            
-  'flat_type':'Тип квартиры',
-  'flat_num':'Номер Квартиры',
-  'houseid':"Код ФИАС"
-}
+ref = pd.read_excel('ref/references.xlsx')
 '''
