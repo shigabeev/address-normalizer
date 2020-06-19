@@ -23,12 +23,12 @@ pip install -r requirements.txt
 ```bash
 python upload_fias.py --fiasdir Path/to/extracted/fias --delete
 ```
-4. Теперь можно пользоваться методами из api.py. Главный метод там — standardize(string) и get_addr([strings])
+4. Теперь можно пользоваться методами из api.py. Главный метод там — standardize(string) и get_addr([string])
 ```python
 import api
 
 addr = "г. Москва, ул. Тверская, д.4"
-list_of_addrs = ["г. Москва, ул. Тверская, д.4", "Москва, Коровий вал 3]
+list_of_addrs = ["г. Москва, ул. Тверская, д.4", "Москва, Коровий вал 3"]
 
 norm_addr = api.standardize(addr)
 list_norm_addrs = api.get_addr(list_of_addrs)
