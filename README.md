@@ -18,10 +18,24 @@ docker-compose up
 3. Установить зависимости
 ```bash
 pip install -r requirements.txt
+
+pip install --upgrade tables
+pip install Flask-SQLAlchemy
 ```
+
+```
+source python_env/bin/activate
+```
+
+```
+/etc/sysctl.conf
+vm.max_map_count=262144
+sudo sysctl -p
+``` 
+
 3. Загрузить ФИАС в elasticsearch. Это обычно занимает около 9 часов.
 ```bash
-python upload_fias.py --fiasdir Path/to/extracted/fias --delete
+python upload_fias.py --fiasdir ~/fias/fias_csv/ --remove
 ```
 4. Теперь можно пользоваться методами из api.py. Главный метод там — standardize(string) и get_addr([string])
 ```python
@@ -53,12 +67,3 @@ list_norm_addrs = api.get_addr(list_of_addrs)
 - parsing.py - все методы для предобработки адреса, работают с самим текстом.
 - tests.py - проверка качества
 - ref/references.xlsx - референсная выборка для оценки качества
-
-## Помощь проекту
-Если вы делаете форк проекта, я буду очень рад дополнить проект вашими изменениями. Присылайте pull-requests! Как оказалось, этот проект часто пригождается разным командам.
-
-В данный момент требуется помощь с
-1. Упрощением разворачивания проекта. Скорее всего нужно переместить elasticsearch на внешний сервер и не разворачивать его локально.
-2. Улучшением качества выдачи самим elastic.
-3. Сокращением memory footprint. Распакованный ФИАС весит около 50Гб, а индексы на elastic весят порой больше 100Гб.
-

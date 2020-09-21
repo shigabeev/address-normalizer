@@ -2,10 +2,12 @@ import pandas as pd
 from elasticsearch import Elasticsearch
 
 from parsing import optimize_for_search, optimize_housenum, preprocess, extract_index, extract_house
+
 '''
 Не работает без Elastic с загруженным туда ФИАС и проиндексированным на поиск родителей каждой строки
 '''
 es = Elasticsearch()
+
 
 def verify_address(full_address):
     '''
@@ -18,14 +20,15 @@ def verify_address(full_address):
     string = optimize_for_search(full_address)
     query = {
         'size': 1,
-        "query":
-            {"query_string":
-                 {"fields": ["fullname"],
-                  "query": string,
-                  "fuzziness": "auto",
-                  "use_dis_max": "true"
-                  }
-             }
+        "query": {
+                "query_string": {
+                    "fields": ["fullname"],
+                    "query": string,
+                    "fuzziness": "auto",
+                    #"use_dis_max": "true"
+                    # "tie_breaker": 0.3
+                }
+            }
     }
     response = es.search(index='fias_full_text', doc_type='address', body=query)
 
@@ -110,7 +113,6 @@ def verify_home(dic, aoguid, index):
     return new_dic
 
 
-
 def standardize(string, origin=True, debug=False):
     '''
     Обёртка для всех методов выше. Разделяет адрес на его составляющие и ищет совпадение в ФИАС. В 90+% случаев находит.
@@ -153,7 +155,5 @@ def get_addr(strings, progress=True):
 
 
 if __name__ == "__main__":
-
-
     address = standardize("142703, Московская область, Ленинский район, г.Видное, ул. Школьная, д.78")
     print(address['address'] + 'д ' + address['дом'])
