@@ -68,40 +68,52 @@ def full_address_sep(GUID, _leaf=True):
             }
         }
     })
-    entry = answer["hits"]["hits"][0]["_source"]
-    level = entry["AOLEVEL"]
-    LUT = {
-        '1': 'region',
-        '3': 'area',
-        '4': 'city',
-        '5': 'district',
-        '6': 'town',
-        '7': 'street',
-        '90': 'additional',
-        '91': 'nestreet'
-    }
-    if _leaf:
-        address['guid'] = GUID
-        address['aolevel'] = entry['AOLEVEL']
-    address[LUT.get(level, level)] = entry['OFFNAME']
-    address[LUT.get(level, level) + "_type"] = entry['SHORTNAME']
-    address['fullname'] = entry['SHORTNAME'] + " " + entry['OFFNAME']
-    if len(entry['PARENTGUID']) > 5:
-        nest = full_address_sep(entry['PARENTGUID'], _leaf=False)
-        string = nest['fullname'] + ', ' + address['fullname']
-        address.update(nest)
-        address['fullname'] = string
+
+    try:
+        entry = answer["hits"]["hits"][0]["_source"]
+        level = entry["AOLEVEL"]
+        LUT = {
+            '1': 'region',
+            '2': 'aregion',
+            '3': 'area',
+            '4': 'city',
+            '5': 'district',
+            '6': 'town',
+            '7': 'street',
+            '8': 'building',
+            '9': 'placement',
+            '65': 'planning',
+            '75': 'land',
+            '90': 'additional',
+            '91': 'nestreet'
+        }
+        if _leaf:
+            address['guid'] = GUID
+            address['aolevel'] = entry['AOLEVEL']
+        address[LUT.get(level, level)] = entry['OFFNAME']
+        address[LUT.get(level, level) + "_type"] = entry['SHORTNAME']
+        address['fullname'] = entry['SHORTNAME'] + " " + entry['OFFNAME']
+        if len(entry['PARENTGUID']) > 5:
+            nest = full_address_sep(entry['PARENTGUID'], _leaf=False)
+            string = nest['fullname'] + ', ' + address['fullname']
+            address.update(nest)
+            address['fullname'] = string
+    except Exception:
+        print("failed get address")
+        print(answer)
+
     return address
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fiasdir', default='fias_dbf/')
+    parser.add_argument('--fiasdir', default='')
     parser.add_argument('--remove', default=False, action='store_true')
     parser.add_argument('--dont-remove', dest='remove', action='store_false')
     args = parser.parse_args()
-    fias_dir = args.fiasdir
+    fias_dir = os.path.join(args.fiasdir, 'fias_dbf/');
+    fias_csv_dir = os.path.dirname(args.fiasdir + 'fias_csv/')
 
     files = glob.glob(os.path.join(fias_dir, 'ADDR*'), recursive=True)
 
@@ -157,26 +169,29 @@ if __name__ == "__main__":
     # Загрузка самой главной таблицы
     # На первых порах её нам хватит. Остальные загружаются при надобности
     # Занимает 2 часа
-    load_elastic('fias_csv/ADDROBJ.csv', 'fias', 'address')
+    # FIXME
+    # load_elastic(os.path.join(fias_csv_dir, 'ADDROBJ.csv'), 'fias', 'address')
 
     # Загрузка в полнотекстовый поиск, где есть и адрес и город и индекс
-    df_addr = pd.read_csv('fias_csv/ADDROBJ.csv', encoding='cp866', dtype=str, error_bad_lines=False)
+    df_addr = pd.read_csv(os.path.join(fias_csv_dir, 'ADDROBJ.csv'), encoding='cp866', dtype=str, error_bad_lines=False)
     # здесь могут быть ошибки парсинга на некоторых полях.
     # Их можно просто пропустить а потом попытаться исправить самостоятельно.
-    start = None
+    start = 0
     finish = None
     i = start
     for _, value in df_addr[["AOGUID"]][df_addr['ACTSTATUS'] == '1'][start:finish].iterrows():
         if i % 50 == 0:
             print(i, end="\r")
+
         full_addr = full_address_sep(value["AOGUID"])
+        # print(full_addr)
         es.index(index="fias_full_text", id=value["AOGUID"], doc_type='address', body=full_addr)
         i += 1
 
     # На данном этапе в elastic должна быть таблица fias_full_text. Далее мы её будем максимально активно использовать
 
     # Можно ставить на ночь. Это очень долго: 18Гб таблица весит
-    load_elastic('fias_csv/HOUSE.csv', 'fias_houses', 'home')
+    load_elastic(os.path.join(fias_csv_dir, 'HOUSE.csv'), 'fias_houses', 'home')
 
     # Удаляем все csv-таблицы, они теперь есть в elastic
     shutil.rmtree("fias_csv")
