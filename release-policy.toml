@@ -1,0 +1,10 @@
+schema_version = 1
+
+[publication]
+# These are machine-enforced release blockers, not maintainer decisions.
+# Change either status only after recording the decision and evidence in the
+# repository. Publication requires both statuses to be "approved".
+license_status = "blocked"
+license_evidence = []
+model_provenance_status = "blocked"
+model_provenance_evidence = []

@@ -6,3 +6,5 @@ __pycache__/
 .venv/
 build/
 dist/
+/artifact-manifest.json
+/release-artifact/
