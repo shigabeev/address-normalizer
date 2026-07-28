@@ -235,6 +235,7 @@ class AddressParser:
     """Parse addresses without consulting or bundling an address registry."""
 
     def __init__(self, tagger: SequenceTagger | None = None) -> None:
+        self.tagger: SequenceTagger | None
         if tagger is not None:
             self.tagger = tagger
         else:
@@ -445,7 +446,8 @@ class AddressParser:
     ) -> None:
         if "city" in components:
             return
-        start = components.get("postal_code").end if components.get("postal_code") else 0
+        postal_code = components.get("postal_code")
+        start = postal_code.end if postal_code else 0
         while start < len(text) and (text[start].isspace() or text[start] in ",.;"):
             start += 1
         match = re.match(r"[A-Za-zА-Яа-яЁё]+(?:-[A-Za-zА-Яа-яЁё]+)*", text[start:])

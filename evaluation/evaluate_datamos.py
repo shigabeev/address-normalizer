@@ -133,6 +133,7 @@ def score(
         for key in ("tp", "fp", "fn", "support")
     }
     elapsed = time.monotonic() - started
+    exact_component_value_micro = _metrics(totals)
     return {
         "rows": row_count,
         "tiers": dict(sorted(tiers.items())),
@@ -140,7 +141,22 @@ def score(
             "case-insensitive exact component value after whitespace and ё/е "
             "folding; street includes its source type marker"
         ),
-        "micro": _metrics(totals),
+        "metric_definitions": {
+            "exact_component_value_micro": (
+                "micro precision, recall, and F1 over case-insensitive exact "
+                "component values after whitespace and ё/е folding"
+            ),
+            "exact_address_rate": (
+                "fraction of rows where every scored component value matches"
+            ),
+            "no_unparsed_rate": (
+                "fraction of rows with no residual word or number spans"
+            ),
+            "fields": "per-field exact component-value metrics",
+        },
+        "exact_component_value_micro": exact_component_value_micro,
+        # Retained for compatibility with the first published report.
+        "micro": exact_component_value_micro,
         "macro_field_f1": round(
             sum(float(value["f1"]) for value in fields.values())
             / len(fields),
@@ -186,7 +202,13 @@ def _summary(report: dict[str, Any]) -> dict[str, Any]:
     return {
         key: value
         for key, value in report.items()
-        if key not in {"failure_sample", "fields"}
+        if key
+        not in {
+            "failure_sample",
+            "fields",
+            "metric_definitions",
+            "exact_component_value_micro",
+        }
     }
 
 

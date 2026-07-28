@@ -9,7 +9,7 @@ from datamos_data import (
     group_id_and_split,
     rejection_reason,
 )
-from evaluate_datamos import score
+from evaluate_datamos import _summary, score
 
 
 def _row() -> dict:
@@ -55,3 +55,9 @@ def test_exact_moscow_component_evaluation():
     report = score([row])
     assert report["micro"]["f1"] == 1.0
     assert report["exact_address_rate"] == 1.0
+    assert report["exact_component_value_micro"] == report["micro"]
+    assert report["metric_definitions"]["fields"].startswith("per-field")
+    summary = _summary(report)
+    assert summary["micro"] == report["exact_component_value_micro"]
+    assert "metric_definitions" not in summary
+    assert "exact_component_value_micro" not in summary

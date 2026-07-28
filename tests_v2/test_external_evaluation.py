@@ -9,6 +9,7 @@ from evaluation.evaluate_redmadrobot import (
     AddressSnippet,
     _gold_spans,
     _reconstruct,
+    _without_failures,
     evaluate,
 )
 
@@ -64,3 +65,9 @@ def test_external_span_evaluation_accepts_overlapping_component_values():
     assert report["micro"]["support"] == 2
     assert report["micro"]["tp"] == 2
     assert report["micro"]["f1"] == 1.0
+    assert report["span_overlap_micro"] == report["micro"]
+    assert report["metric_definitions"]["fields"].startswith("per-field")
+    summary = _without_failures(report)
+    assert summary["micro"] == report["span_overlap_micro"]
+    assert "metric_definitions" not in summary
+    assert "span_overlap_micro" not in summary

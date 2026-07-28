@@ -143,19 +143,34 @@ def score_rows(
         2 * micro_precision * micro_recall,
         micro_precision + micro_recall,
     )
+    exact_component_value_micro = {
+        "tp": micro_tp,
+        "fp": micro_fp,
+        "fn": micro_fn,
+        "precision": round(micro_precision, 6),
+        "recall": round(micro_recall, 6),
+        "f1": round(micro_f1, 6),
+    }
     return {
         "rows": total,
         "review_statuses": dict(review_statuses),
+        "metric_definitions": {
+            "exact_address_rate": (
+                "fraction of rows where every public component value matches"
+            ),
+            "no_unparsed_rate": (
+                "fraction of rows with no residual word or number spans"
+            ),
+            "exact_component_value_micro": (
+                "micro precision, recall, and F1 over case-insensitive exact "
+                "component values after whitespace and ё/е folding"
+            ),
+        },
         "exact_address_rate": round(_safe_ratio(exact, total), 6),
         "no_unparsed_rate": round(_safe_ratio(no_unparsed, total), 6),
-        "micro": {
-            "tp": micro_tp,
-            "fp": micro_fp,
-            "fn": micro_fn,
-            "precision": round(micro_precision, 6),
-            "recall": round(micro_recall, 6),
-            "f1": round(micro_f1, 6),
-        },
+        "exact_component_value_micro": exact_component_value_micro,
+        # Retained for compatibility with existing release-gate paths.
+        "micro": exact_component_value_micro,
         "fields": fields,
         "failure_sample": failures,
     }

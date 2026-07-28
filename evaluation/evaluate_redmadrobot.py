@@ -295,6 +295,7 @@ def evaluate(
         for values in fields.values()
         if values["support"]
     ]
+    span_overlap_micro = _prf(totals)
     return {
         "source_rows": len(source_rows),
         "address_snippets": snippet_count,
@@ -302,7 +303,19 @@ def evaluate(
             "one-to-one same-label span overlap; address windows are oracle-"
             "cropped from the benchmark's BIO annotations"
         ),
-        "micro": _prf(totals),
+        "metric_definitions": {
+            "span_overlap_micro": (
+                "micro precision, recall, and F1 for one-to-one same-label "
+                "spans with any character overlap"
+            ),
+            "exact_span_recall": (
+                "exact-boundary same-label matches divided by gold span count"
+            ),
+            "fields": "per-field span-overlap precision, recall, and F1",
+        },
+        "span_overlap_micro": span_overlap_micro,
+        # Retained for compatibility with the first published report.
+        "micro": span_overlap_micro,
         "macro_field_f1": round(
             sum(supported_f1) / len(supported_f1) if supported_f1 else 0.0,
             6,
@@ -322,7 +335,12 @@ def _without_failures(report: dict[str, Any]) -> dict[str, Any]:
     return {
         key: value
         for key, value in report.items()
-        if key != "failure_sample"
+        if key
+        not in {
+            "failure_sample",
+            "metric_definitions",
+            "span_overlap_micro",
+        }
     }
 
 

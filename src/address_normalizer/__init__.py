@@ -1,13 +1,24 @@
 """Small, offline Russian address parser."""
 
-from .api import parse, parse_many
-from .types import AddressPart, Alternative, ParsedAddress
+from .api import parse, parse_iter, parse_many
+from .types import (
+    AddressPart,
+    AddressPartDict,
+    Alternative,
+    AlternativeDict,
+    ParsedAddress,
+    ParsedAddressDict,
+)
 
 __all__ = [
     "AddressPart",
+    "AddressPartDict",
     "Alternative",
+    "AlternativeDict",
     "ParsedAddress",
+    "ParsedAddressDict",
     "parse",
+    "parse_iter",
     "parse_many",
 ]
 

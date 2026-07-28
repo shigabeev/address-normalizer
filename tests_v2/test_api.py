@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
+import json
+
 import pytest
 
-from address_normalizer import parse, parse_many
+from address_normalizer import parse, parse_iter, parse_many
 
 
 def value(part):
@@ -146,3 +149,87 @@ def test_parse_many_preserves_order():
         "Тверская",
         "Ополченская",
     ]
+
+
+def test_parse_many_accepts_generators_and_parse_iter_is_lazy():
+    consumed: list[str] = []
+
+    def addresses():
+        for raw in ("Тверская 1", "Ополченская 2"):
+            consumed.append(raw)
+            yield raw
+
+    results = parse_iter(addresses())
+    assert consumed == []
+    first = next(results)
+    assert first.raw == "Тверская 1"
+    assert consumed == ["Тверская 1"]
+    assert [result.raw for result in results] == ["Ополченская 2"]
+    assert [result.raw for result in parse_many(addresses())] == [
+        "Тверская 1",
+        "Ополченская 2",
+    ]
+
+
+@pytest.mark.parametrize("addresses", ["Тверская 1", b"address", None])
+def test_batch_api_rejects_non_iterables_and_single_strings(addresses):
+    with pytest.raises(TypeError, match="iterable of strings"):
+        parse_many(addresses)
+
+
+def test_batch_api_identifies_a_bad_element():
+    with pytest.raises(TypeError, match=r"addresses\[1\] must be a string"):
+        parse_many(["Тверская 1", None])
+
+
+def test_result_serialization_is_json_compatible_and_keeps_review_signals():
+    raw = "ориентир вокзал, Ополченская 5-30"
+    result = parse(raw)
+    payload = result.as_dict()
+
+    assert json.loads(json.dumps(payload, ensure_ascii=False)) == payload
+    assert payload["raw"] == raw
+    assert payload["warnings"] == [
+        "ambiguous_numeric_tail",
+        "unparsed_text",
+    ]
+    assert payload["alternatives"][0]["components"] == {"house_num": "5-30"}
+    assert payload["unparsed"][0]["raw"] == "ориентир"
+    for field in ("street", "house_num", "apartment"):
+        part = payload[field]
+        assert part is not None
+        start, end = part["span"]
+        assert raw[start:end] == part["raw"]
+
+
+def test_shared_default_parser_is_safe_for_concurrent_calls():
+    addresses = [f"г. Москва, ул. Тверская, д. {index}" for index in range(1, 33)]
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        results = list(executor.map(parse, addresses))
+
+    assert [result.raw for result in results] == addresses
+    assert [result.house_num.value for result in results] == [
+        str(index) for index in range(1, 33)
+    ]
+
+
+def test_very_long_input_is_not_truncated_and_keeps_offsets():
+    raw = " " * 20_000 + "ул. Тверская, д. 4"
+    result = parse(raw)
+
+    assert result.raw == raw
+    for part in (result.street_type, result.street, result.house_num):
+        assert part is not None
+        assert raw[part.start : part.end] == part.raw
+
+
+def test_control_character_input_retains_raw_and_unparsed_content():
+    raw = "ул. Тверская, д. 4\x00подъезд 2"
+    result = parse(raw)
+
+    assert result.raw == raw
+    assert result.house_num is not None
+    assert result.house_num.value == "4"
+    assert result.warnings == ("unparsed_text",)
+    assert result.unparsed[0].raw == "подъезд 2"
+    assert raw[result.unparsed[0].start : result.unparsed[0].end] == "подъезд 2"

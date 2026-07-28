@@ -18,6 +18,21 @@
     "house_structure": 5642
   },
   "matching": "case-insensitive exact component value after whitespace and ё/е folding; street includes its source type marker",
+  "metric_definitions": {
+    "exact_component_value_micro": "micro precision, recall, and F1 over case-insensitive exact component values after whitespace and ё/е folding",
+    "exact_address_rate": "fraction of rows where every scored component value matches",
+    "no_unparsed_rate": "fraction of rows with no residual word or number spans",
+    "fields": "per-field exact component-value metrics"
+  },
+  "exact_component_value_micro": {
+    "tp": 32604,
+    "fp": 5572,
+    "fn": 5610,
+    "support": 38214,
+    "precision": 0.854044,
+    "recall": 0.853195,
+    "f1": 0.85362
+  },
   "micro": {
     "tp": 32604,
     "fp": 5572,

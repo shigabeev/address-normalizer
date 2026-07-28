@@ -11,7 +11,7 @@ from deepparse_data import (
     normalized_address_id,
     quality_tier,
 )
-from evaluate_deepparse import _score, gold_spans, predicted_spans
+from evaluate_deepparse import _score, _summary, gold_spans, predicted_spans
 from address_normalizer import parse
 
 
@@ -105,3 +105,15 @@ def test_gold_and_predicted_spans_align_on_a_conventional_address():
     assert report["character_micro"]["f1"] == 1.0
     assert report["token_micro"]["f1"] == 1.0
     assert report["exact_token_sequence_rate"] == 1.0
+    assert report["span_overlap_micro"] == report["micro"]
+    assert report["character_overlap_micro"] == report["character_micro"]
+    assert report["token_label_micro"] == report["token_micro"]
+    assert report["metric_definitions"]["fields"].startswith("per-field")
+    assert report["metric_definitions"]["character_fields"].startswith("per-field")
+    assert report["metric_definitions"]["token_fields"].startswith("per-field")
+    summary = _summary(report)
+    assert summary["micro"] == report["span_overlap_micro"]
+    assert "metric_definitions" not in summary
+    assert "span_overlap_micro" not in summary
+    assert "character_overlap_micro" not in summary
+    assert "token_label_micro" not in summary

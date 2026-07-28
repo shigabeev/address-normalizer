@@ -29,6 +29,11 @@ python evaluation/evaluate.py \
   --gates evaluation/release_gates.json
 ```
 
+This is the portable release gate: it uses only the committed 500-row fixture,
+requires no download, and runs as part of the normal test suite. The report
+names its exact-value aggregate `exact_component_value_micro`; the legacy
+`micro` key remains as a compatibility alias for existing gate files.
+
 The `2.0.0a1` baseline is:
 
 - 500 rows;
@@ -124,6 +129,18 @@ python evaluation/evaluate_deepparse.py \
   --output evaluation/deepparse_report.json
 ```
 
+The report uses explicit metric-family keys:
+
+- `span_overlap_micro`: binary same-label span matching with any overlap;
+- `character_overlap_micro`: overlapping-character precision, recall, and F1;
+- `token_label_micro`: aligned source-token label precision, recall, and F1;
+- `exact_address_rate`: exact labels and exact span boundaries for a full row;
+- `exact_token_sequence_rate`: exact complete token-label sequence.
+
+The original `micro`, `character_micro`, and `token_micro` names remain
+compatibility aliases. Each generated report includes `metric_definitions`;
+do not compare or average values from different metric families.
+
 The initial untuned 100,000-row result is:
 
 | Measure | Result |
@@ -169,6 +186,9 @@ Run exact-value evaluation:
 python evaluation/evaluate_datamos.py \
   --output evaluation/datamos_report.json
 ```
+
+The exact-value aggregate is named `exact_component_value_micro`; `micro`
+remains a compatibility alias for the first published report schema.
 
 | Measure | Result |
 | --- | ---: |

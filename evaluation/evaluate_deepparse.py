@@ -292,13 +292,45 @@ def _score(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
         for key in ("tp", "fp", "fn", "support")
     }
     elapsed = time.monotonic() - started
+    span_overlap_micro = _metrics(totals)
+    character_overlap_micro = _metrics(character_totals)
+    token_label_micro = _metrics(token_totals)
     return {
         "rows": row_count,
         "tiers": dict(sorted(tiers.items())),
         "matching": "one-to-one same-label character-span overlap",
-        "micro": _metrics(totals),
-        "character_micro": _metrics(character_totals),
-        "token_micro": _metrics(token_totals),
+        "metric_definitions": {
+            "span_overlap_micro": (
+                "binary micro precision, recall, and F1 for one-to-one "
+                "same-label spans with any character overlap"
+            ),
+            "character_overlap_micro": (
+                "micro precision, recall, and F1 over same-label overlapping "
+                "characters"
+            ),
+            "token_label_micro": (
+                "micro precision, recall, and F1 over aligned source-token "
+                "labels"
+            ),
+            "exact_address_rate": (
+                "fraction of rows with identical labels and exact span "
+                "boundaries"
+            ),
+            "exact_token_sequence_rate": (
+                "fraction of rows whose complete aligned token-label sequence "
+                "matches"
+            ),
+            "fields": "per-field binary span-overlap metrics",
+            "character_fields": "per-field character-overlap metrics",
+            "token_fields": "per-field aligned token-label metrics",
+        },
+        "span_overlap_micro": span_overlap_micro,
+        "character_overlap_micro": character_overlap_micro,
+        "token_label_micro": token_label_micro,
+        # Retained for compatibility with the first published report.
+        "micro": span_overlap_micro,
+        "character_micro": character_overlap_micro,
+        "token_micro": token_label_micro,
         "macro_field_f1": round(
             sum(float(value["f1"]) for value in fields.values())
             / len(fields),
@@ -367,6 +399,10 @@ def _summary(report: dict[str, Any]) -> dict[str, Any]:
             "fields",
             "character_fields",
             "token_fields",
+            "metric_definitions",
+            "span_overlap_micro",
+            "character_overlap_micro",
+            "token_label_micro",
         }
     }
 
