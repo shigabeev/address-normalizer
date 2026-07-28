@@ -41,6 +41,50 @@ a bounded failure sample. Gate thresholds are intentionally just below the
 measured deterministic baseline: they prevent regressions but do not establish
 production accuracy.
 
+## Independent external benchmark
+
+The repository also includes an adapter for
+[RedMadRobot's MIT-licensed Russian PII NER benchmark](https://huggingface.co/datasets/redmadrobot-rnd/pii_benchmark).
+Its 2,841 manually BIO-annotated sentences combine
+production-log-shaped inputs (with real personal values replaced), synthetic
+document-style examples, and manually filtered hard negatives. The external
+data is pinned by Git revision and SHA-256 but is not committed or used for
+training.
+
+Run the external evaluation once with:
+
+```bash
+python evaluation/evaluate_redmadrobot.py --download \
+  --output evaluation/redmadrobot_report.json
+```
+
+Subsequent runs can omit `--download`. The adapter extracts minimal address
+windows from the gold BIO annotations and scores one-to-one, same-label span
+overlap for `REGION`, `DISTRICT`, `CITY`, `STREET`, and `HOUSE`. This measures
+address parsing after an address window has already been identified; it is not
+an address-in-arbitrary-text detection score. `COUNTRY` is retained as context
+but is not scored because it is not currently a public parser field.
+
+Treat this set as sealed evaluation data: do not train on it, tune thresholds
+against it, or turn its failures into model features without replacing it with a
+new untouched final test.
+
+The first untuned baseline covers 1,010 address spans in 578 snippets from 493
+source rows:
+
+| Slice | Snippets | Micro span F1 |
+| --- | ---: | ---: |
+| All address windows | 578 | 58.7% |
+| Two or more distinct fields | 217 | 73.6% |
+| Contains both street and house | 144 | 78.8% |
+| Administrative fields only | 403 | 41.7% |
+
+Per-field F1 on all windows is 52.4% region, 44.5% district, 59.8% city, 49.1%
+street, and 90.2% house. The large difference from the legacy regression is
+important evidence: the parser is useful for conventional street-and-house
+inputs, but it currently defaults too readily to `STREET` on isolated
+administrative names and has weak administrative recall.
+
 ## Promoting this to a gold benchmark
 
 Before making a production-quality claim:

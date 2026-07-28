@@ -148,8 +148,14 @@ python evaluation/evaluate.py \
 The current baseline is 80.4% exact-address match and 95.9% micro field F1. The
 source rows have not been independently re-reviewed for v2, so these are
 engineering regression numbers—not a production or nationwide accuracy claim.
-See `evaluation/README.md` for selection rules, per-field metrics, and the path
-to a defensible gold benchmark.
+
+On the independent RedMadRobot Russian PII benchmark, the first untuned result
+is 58.7% micro span F1 across every address window, 73.6% on windows with at
+least two distinct fields, and 78.8% when both street and house are present.
+This external result is the more useful estimate of present generalization:
+house parsing is strong, while administrative recall and street precision need
+work. See `evaluation/README.md` for the pinned data source, scoring boundary,
+per-field metrics, and failure sample.
 
 ## What this package does not do
 
