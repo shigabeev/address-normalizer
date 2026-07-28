@@ -157,6 +157,23 @@ house parsing is strong, while administrative recall and street precision need
 work. See `evaluation/README.md` for the pinned data source, scoring boundary,
 per-field metrics, and failure sample.
 
+Two much larger clean-address benchmarks now make the reliability boundary more
+concrete:
+
+- 100,000 group-disjoint Russian test addresses from Deepparse produce 66.2%
+  character-overlap F1 (84.4% binary span-overlap F1). Street detection is
+  strong, while administrative fields remain weak.
+- 15,196 group-disjoint active official Moscow registry addresses produce 85.4%
+  exact component-value F1 and 64.9% exact full-address match. House, корпус,
+  and строение exceed 96.9% field F1; exact street extraction is 66.2%.
+
+These scores are deliberately not averaged. Deepparse is nationwide but
+registry-derived and uses a different token schema; the Moscow snapshot is
+official and exact-value scored but clean, Moscow-only, and from October 2021.
+The full external data stays in `.cache/external/`, never in the wheel. See
+`evaluation/README.md` for reproducible downloads, checksums, filters, and
+reports.
+
 ## What this package does not do
 
 It does not:
@@ -179,6 +196,16 @@ pytest
 python training/train_compact_tagger.py
 python training/evaluate_compact_tagger.py
 ```
+
+Large external data preparation has separate, pinned tooling:
+
+```bash
+python -m pip install -r requirements-evaluation.txt
+python evaluation/prepare_deepparse.py --download
+python evaluation/prepare_datamos.py --download
+```
+
+These dependencies and datasets are not installed with the runtime package.
 
 Build artifacts:
 

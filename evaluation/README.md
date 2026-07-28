@@ -85,6 +85,121 @@ important evidence: the parser is useful for conventional street-and-house
 inputs, but it currently defaults too readily to `STREET` on isolated
 administrative names and has weak administrative recall.
 
+## Large external corpora
+
+Install the data-only tools in a separate environment:
+
+```bash
+python -m venv .venv-evaluation
+.venv-evaluation/bin/python -m pip install -r requirements-evaluation.txt
+```
+
+The runtime wheel remains dependency-free. Raw and derived files are written to
+the ignored `.cache/external/` directory.
+
+### Nationwide clean addresses: Deepparse
+
+Prepare the complete pinned Russian shard:
+
+```bash
+.venv-evaluation/bin/python evaluation/prepare_deepparse.py \
+  --download --overwrite
+```
+
+The streaming pipeline verifies the 371,595,309-byte source by SHA-256, checks
+all 13,152,918 token/tag sequences, filters administrative-only strings,
+deduplicates normalized text, maps the external tags to package fields, and
+assigns canonical building groups to deterministic 90/5/5 splits. The result is:
+
+- 6,314,158 unique usable rows;
+- 5,681,842 train, 316,586 validation, and 315,730 test rows;
+- 5,293,689 street-and-house rows, including 679,076 with a unit;
+- a 557,321,339-byte labeled Parquet corpus;
+- a deterministic 100,000-row compressed JSONL sample from test only.
+
+Run the large test:
+
+```bash
+python evaluation/evaluate_deepparse.py \
+  --output evaluation/deepparse_report.json
+```
+
+The initial untuned 100,000-row result is:
+
+| Measure | Result |
+| --- | ---: |
+| Binary same-label span-overlap F1 | 84.4% |
+| Character-overlap F1 | 66.2% |
+| Token-label F1 | 66.5% |
+| Exact token-boundary sequence | 8.0% |
+| Throughput | 7,245 rows/s |
+
+Binary span overlap is intentionally lenient: any overlapping same-label span is
+a match. Character and token metrics expose partial values and merged spans, but
+also penalize schema-boundary differences such as the source labeling `дом 12`
+as one entity while the package returns the value `12`. Publish all three, not
+only the largest number.
+
+Character-overlap F1 by field is 99.9% postcode, 22.3% region, 22.6% district,
+52.2% city, 76.7% street, 59.0% house, and 47.1% apartment. The set is national
+in scale but consists of curated open-geographic addresses rather than noisy
+user input.
+
+### Official clean addresses: Moscow registry
+
+Prepare the pinned October 2021 city snapshot:
+
+```bash
+.venv-evaluation/bin/python evaluation/prepare_datamos.py \
+  --download --overwrite
+```
+
+The filter retains only addresses that are on Moscow territory, official,
+registered in the address registry, present in GKN, have a valid FIAS UUID, and
+contain structured street and house values. It removes normalized duplicates
+and groups street/house/корпус/строение identities before splitting.
+
+The result contains 307,274 unique active official addresses: 276,368 train,
+15,710 validation, and 15,196 test. The portable filtered artifact is
+26,050,795 bytes compressed.
+
+Run exact-value evaluation:
+
+```bash
+python evaluation/evaluate_datamos.py \
+  --output evaluation/datamos_report.json
+```
+
+| Measure | Result |
+| --- | ---: |
+| Exact component-value micro F1 | 85.4% |
+| Exact full-address match | 64.9% |
+| Street F1 | 66.2% |
+| House F1 | 98.2% |
+| Корпус F1 | 99.6% |
+| Строение F1 | 97.0% |
+
+This is the strongest current clean-building benchmark because it scores exact
+structured values rather than mere span overlap. It is still not a production
+claim: the snapshot is old, Moscow-only, and legally formatted.
+
+The archive embeds the original portal dataset ID, publisher, version, source
+URL, and Russian government open-data terms. The mirror describes the package
+as CC-BY-SA. Keep both records and confirm redistribution terms before
+publishing derived rows.
+
+## Current evidence, kept separate
+
+| Domain | Test size | Primary measure | Baseline |
+| --- | ---: | --- | ---: |
+| Historical bank-shaped reference | 500 | exact field micro F1 | 95.9% |
+| RedMadRobot noisy address windows | 578 | binary span-overlap F1 | 58.7% |
+| Deepparse nationwide clean strings | 100,000 | character-overlap F1 | 66.2% |
+| Moscow official clean buildings | 15,196 | exact component-value F1 | 85.4% |
+
+These numbers answer different questions and must not be averaged into one
+“accuracy” claim.
+
 ## Promoting this to a gold benchmark
 
 Before making a production-quality claim:

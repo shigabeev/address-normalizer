@@ -30,24 +30,37 @@ not committed or used for training.
 - Strength: nationwide scale and an independently defined token schema
 - Limitation: curated from libpostal/open geographic data rather than raw user
   input; punctuation is removed; there is no predefined sealed split
-- Proposed use: a deterministic 10,000-row evaluation sample, never training
+- Integrated filter: retain street/house/unit-bearing rows, validate all token
+  labels, deduplicate normalized text, map labels to package fields, and group
+  building identities before deterministic 90/5/5 splitting
+- Result: 6,314,158 unique usable rows and a 100,000-row sealed test sample
+- Status: integrated as a reproducible external corpus and clean-address
+  benchmark; the current compact model has not been trained on it
 
-This is the best next scale benchmark. It should report token/span metrics
-separately from the RedMadRobot real-input-shape benchmark rather than combining
-the two scores.
+The committed manifest pins the source and generated artifact checksums. Report
+binary span, character-overlap, and token metrics separately from the
+RedMadRobot real-input-shape benchmark.
 
 ## 3. Moscow official address registry
 
-- Source documentation:
-  <https://data.apicrafter.ru/tables/datamos/addressreestr/docs>
-- Published origin: Moscow open-data portal
-- Size reported by the catalog: 440,399 records, approximately 766 MB
+- Source package:
+  <https://data2.apicrafter.ru/packages/datamos-addressreestr>
+- Published origin: Moscow open-data portal, dataset ID 60562, Department of
+  City Property
+- Pinned snapshot: version 3.630, released 15 October 2021
+- Size: 440,399 records; 121,581,813-byte download archive
 - Fields include full and simplified address strings plus region, city,
   settlement, street/road element, house, корпус, строение, room, and FIAS ID
 - Strength: official structured truth and building-level identifiers
-- Limitation: Moscow-only, clean legal formatting, and bulk access/redistribution
-  terms must be verified from the original publisher before integration
-- Proposed use: a 10,000-row clean official-address slice after provenance review
+- Integrated filter: retain active official Moscow/GKN records with valid FIAS
+  UUID, street, and house; deduplicate normalized simplified addresses; group
+  building identities before deterministic 90/5/5 splitting
+- Result: 307,274 unique usable rows and 15,196 exact-value test rows
+- Limitation: Moscow-only, clean legal formatting, and a stale 2021 snapshot
+- Terms: the archive embeds Russian government open-data terms; the mirror
+  describes the package as CC-BY-SA. Confirm redistribution before publishing
+  derived rows.
+- Status: integrated as a reproducible historical official-address benchmark
 
 ## Evaluation policy
 
@@ -60,3 +73,11 @@ Keep the three domains separate:
 Never average them into one headline accuracy number. Publish per-field metrics
 and domain-specific slices, and reserve a new untouched dataset before changing
 rules or features in response to observed external failures.
+
+## Local artifacts
+
+All raw and derived data stays under `.cache/external/` and is ignored by Git.
+The runtime wheel contains none of it. The committed `deepparse_manifest.json`
+and `datamos_manifest.json` record exact filters, counts, revisions, checksums,
+split policies, and limitations; the matching report JSON files record the
+first untuned scores.

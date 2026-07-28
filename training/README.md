@@ -54,6 +54,13 @@ right to be used for redistribution of a derived model still needs explicit
 confirmation. Do not publish the wheel or model until that and the v2 license
 are resolved.
 
+The external preparation tools now expose 5,681,842 Deepparse training rows and
+276,368 historical Moscow-registry training rows in group-disjoint splits.
+They are not used by the current 37 KB model. Before training on them, define a
+sampling policy so repeated clean formatting does not overwhelm the smaller
+noisy-input corpus, keep the committed test groups sealed, and record the
+derived-model rights for CC BY 4.0 and the Moscow source terms.
+
 For a production training release:
 
 1. independently review at least 300 aligned rows;

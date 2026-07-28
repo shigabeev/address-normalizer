@@ -1,0 +1,4 @@
+# Runtime installation remains dependency-free. This extra is only needed to
+# prepare the large external Parquet benchmark.
+pyarrow==25.0.0
+pymongo==4.17.0
