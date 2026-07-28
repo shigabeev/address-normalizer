@@ -1,0 +1,8 @@
+include README.md
+include CONTRIBUTING.md
+include LICENSING.md
+include SECURITY.md
+include requirements-legacy.txt
+recursive-include evaluation *.json *.jsonl *.md *.py
+recursive-include tests_v2 *.py
+recursive-include training *.md *.py

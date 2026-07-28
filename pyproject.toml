@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "address-normalizer"
+version = "2.0.0a1"
+description = "A small offline parser for unstructured Russian addresses"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Ilya Shigabeev" }]
+keywords = [
+  "address",
+  "parser",
+  "russian",
+  "normalization",
+  "nlp",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Natural Language :: Russian",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Text Processing :: Linguistic",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/shigabeev/address-normalizer"
+Repository = "https://github.com/shigabeev/address-normalizer"
+Issues = "https://github.com/shigabeev/address-normalizer/issues"
+
+[project.scripts]
+address-normalizer = "address_normalizer.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+address_normalizer = ["data/*.json", "py.typed"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests_v2"]
