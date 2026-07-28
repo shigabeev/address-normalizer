@@ -9,7 +9,8 @@ from __future__ import annotations
 from importlib.resources import files
 import json
 from math import exp
-from typing import Iterable, Sequence
+from pathlib import Path
+from typing import cast, Iterable, Sequence
 
 from .tokenizer import Token
 
@@ -73,11 +74,19 @@ class CompactSequenceTagger:
     @classmethod
     def from_package(cls) -> "CompactSequenceTagger":
         model_path = files("address_normalizer").joinpath("data/model.json")
-        payload = json.loads(model_path.read_text(encoding="utf-8"))
+        return cls.from_payload(json.loads(model_path.read_text(encoding="utf-8")))
+
+    @classmethod
+    def from_path(cls, path: str | Path) -> "CompactSequenceTagger":
+        payload = json.loads(Path(path).read_text(encoding="utf-8"))
+        return cls.from_payload(payload)
+
+    @classmethod
+    def from_payload(cls, payload: dict[str, object]) -> "CompactSequenceTagger":
         return cls(
-            labels=payload["labels"],
-            emissions=payload["emissions"],
-            transitions=payload["transitions"],
+            labels=cast(list[str], payload["labels"]),
+            emissions=cast(dict[str, float], payload["emissions"]),
+            transitions=cast(dict[str, float], payload["transitions"]),
         )
 
     def emission_score(self, label: str, features: Iterable[str]) -> float:

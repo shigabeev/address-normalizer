@@ -1,30 +1,64 @@
 # Training the compact tagger
 
-The runtime tagger is a sparse linear-chain model with Viterbi inference. Both
-training and inference use only the Python standard library.
+The runtime model is a sparse linear-chain sequence tagger with Viterbi
+inference. Training uses an epoch-averaged structured perceptron. Training and
+inference require only the Python standard library.
 
-Regenerate the bundled starter model:
+The real-address corpus is derived from the 500 source-verifiable rows in
+`evaluation/legacy_reference_500.jsonl`:
+
+1. the deterministic parser records the exact residual word tokens that reach
+   the model;
+2. source-verifiable address fields are aligned to those token offsets;
+3. marker-free views are derived from the same real component names;
+4. examples are grouped by canonical administrative/street identity;
+5. SHA-256 assigns whole groups to train, validation, or test (70/15/15);
+6. epoch count is chosen on validation only;
+7. the final candidate is evaluated once on the untouched test groups.
+
+Regenerate the model and committed evaluation report:
 
 ```bash
 python training/train_compact_tagger.py
 ```
 
-Evaluate it on the small, deliberately unseen smoke corpus:
+Verify the bundled artifact against fixed test gates:
 
 ```bash
 python training/evaluate_compact_tagger.py
 ```
 
-The starter corpus contains synthetic public place names. It establishes a
-reproducible model artifact and exercises the hybrid parser, but it must not be
-presented as nationwide quality evidence.
+The first real model is 37 KB. Compared with the preserved 20 KB synthetic
+starter on the group-disjoint sequence test:
 
-A production training release should:
+| Metric | Synthetic starter | Real model |
+| --- | ---: | ---: |
+| Token accuracy | 71.3% | 96.5% |
+| Complete sequence accuracy | 61.4% | 94.3% |
+| Micro entity F1 | 78.1% | 96.9% |
 
-1. convert reviewed address rows into offset-preserving token labels;
-2. group all variations of one canonical address in a single split;
-3. reserve a manually reviewed gold set;
-4. generate punctuation, abbreviation, deletion, reordering, and typo noise;
-5. report token accuracy, full-sequence accuracy, and field exact match;
-6. inspect failures by source system and region;
-7. document the right to redistribute both examples and the derived model.
+On the 21 corresponding end-to-end holdout rows, micro field F1 improves from
+87.4% to 91.3%. The test split contains no independently measured
+`DISTRICT` or `SETTLEMENT` tokens, so those classes must not be claimed as
+validated by this result. See `model_evaluation.json` for the exact split,
+tuning runs, class coverage, failures, and end-to-end comparison.
+
+`training/baselines/synthetic_model.json` preserves the pre-real-data model so
+that regeneration remains reproducible and comparisons do not silently change
+after the bundled model is replaced.
+
+## Provenance limitation
+
+The source workbook was already published in the historical repository, but its
+right to be used for redistribution of a derived model still needs explicit
+confirmation. Do not publish the wheel or model until that and the v2 license
+are resolved.
+
+For a production training release:
+
+1. independently review at least 300 aligned rows;
+2. add substantially more district and settlement examples;
+3. preserve canonical-address grouping across every split;
+4. reserve a final dataset not used for feature or rule changes;
+5. report confidence intervals and field metrics by region and source system;
+6. document the right to redistribute examples and the derived model.

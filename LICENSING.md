@@ -30,5 +30,6 @@ The owner should choose one of these paths:
    contributions.
 
 Do not publish the PyPI package or invite substantive reusable contributions
-until the owner records the choice. This document is a repository audit, not
-legal advice.
+until the owner records the choice. Also confirm that the historical reference
+workbook may be used to redistribute the derived compact model. This document is
+a repository audit, not legal advice.

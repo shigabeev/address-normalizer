@@ -7,9 +7,10 @@ from collections import Counter
 import json
 from pathlib import Path
 import sys
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 
 from address_normalizer import parse
+from address_normalizer.types import ParsedAddress
 
 
 FIELDS = (
@@ -59,7 +60,10 @@ def _safe_ratio(numerator: int, denominator: int) -> float:
     return numerator / denominator if denominator else 0.0
 
 
-def _score(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
+def score_rows(
+    rows: Iterable[dict[str, Any]],
+    parse_address: Callable[[str], ParsedAddress] = parse,
+) -> dict[str, Any]:
     field_counts = {
         field: {"tp": 0, "fp": 0, "fn": 0, "support": 0}
         for field in FIELDS
@@ -73,7 +77,7 @@ def _score(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
     for row in rows:
         total += 1
         review_statuses[str(row.get("review_status", "unspecified"))] += 1
-        result = parse(row["raw"])
+        result = parse_address(row["raw"])
         expected = row["expected"]
         row_mismatches: dict[str, dict[str, str | None]] = {}
 
@@ -206,7 +210,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
 
-    report = _score(_load_jsonl(args.data))
+    report = score_rows(_load_jsonl(args.data))
     if args.gates:
         gates = json.loads(args.gates.read_text(encoding="utf-8"))
         report["gates"] = _check_gates(report, gates)

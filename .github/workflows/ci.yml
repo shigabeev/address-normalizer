@@ -31,7 +31,12 @@ jobs:
       - name: Run tests
         run: pytest
       - name: Verify compact model
-        run: python training/evaluate_compact_tagger.py
+        run: |
+          python training/evaluate_compact_tagger.py
+          python training/train_compact_tagger.py \
+            --output /tmp/regenerated-model.json \
+            --report /tmp/regenerated-model-report.json
+          cmp src/address_normalizer/data/model.json /tmp/regenerated-model.json
       - name: Enforce legacy-reference release gates
         run: |
           python evaluation/evaluate.py \

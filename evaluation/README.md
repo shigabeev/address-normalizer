@@ -17,8 +17,9 @@ parse-only package were expected to correct or resolve them.
 
 The workbook was already published in the historical repository as a reference
 sample. The selected rows have **not** been independently re-reviewed during the
-v2 work, are not bundled in the wheel, and are not model-training data. Describe
-this as a legacy reference or silver benchmark—not a new gold dataset.
+v2 work and are not bundled in the wheel. A canonical-grouped subset now trains
+the compact tagger, while disjoint groups are reserved for validation and test.
+Describe the data as a legacy reference or silver corpus—not a new gold dataset.
 
 Run the alpha regression gate:
 
@@ -31,9 +32,9 @@ python evaluation/evaluate.py \
 The `2.0.0a1` baseline is:
 
 - 500 rows;
-- 78.8% exact-address match;
-- 94.9% micro field F1;
-- 77.4% with no residual word or number tokens.
+- 80.4% exact-address match;
+- 95.9% micro field F1;
+- 76.8% with no residual word or number tokens.
 
 The evaluator reports precision, recall, and F1 for every public field and keeps
 a bounded failure sample. Gate thresholds are intentionally just below the
@@ -49,7 +50,7 @@ Before making a production-quality claim:
 3. record reviewer, decision, notes, and review date;
 4. exclude corrected registry values that do not occur in the raw input;
 5. group variations of one canonical address into the same data split;
-6. keep a sealed test split that is never used to tune rules or the model;
+6. keep a final test split that is never used to tune rules or the model;
 7. publish field metrics, confidence intervals, slice failures, and limitations;
 8. do not distribute address rows unless their provenance permits it.
 

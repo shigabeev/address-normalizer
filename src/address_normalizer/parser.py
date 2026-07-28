@@ -4,12 +4,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import re
-from typing import Callable, Iterable, Sequence
+from typing import Callable, Iterable, Protocol, Sequence
 
 from .normalization import normalize_name, normalize_number
 from .tagger import CompactSequenceTagger
 from .tokenizer import Token, tokenize
 from .types import AddressPart, Alternative, ParsedAddress
+
+
+class SequenceTagger(Protocol):
+    def tag(self, tokens: Sequence[Token]) -> tuple[list[str], list[float]]: ...
 
 
 _LETTER = r"A-Za-zА-Яа-яЁё"
@@ -230,7 +234,7 @@ def _part(
 class AddressParser:
     """Parse addresses without consulting or bundling an address registry."""
 
-    def __init__(self, tagger: CompactSequenceTagger | None = None) -> None:
+    def __init__(self, tagger: SequenceTagger | None = None) -> None:
         if tagger is not None:
             self.tagger = tagger
         else:

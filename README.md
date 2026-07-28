@@ -127,9 +127,12 @@ source text
 The bundled model is deliberately small and only classifies residual unmarked
 text. High-confidence numeric syntax remains deterministic.
 
-The current starter model is trained from a reproducible synthetic public
-place-name corpus. It proves the hybrid runtime and packaging architecture; it is
-not yet evidence of nationwide accuracy. See `training/README.md`.
+The current 37 KB model is trained from source-verifiable legacy reference rows
+using canonical-address-grouped train, validation, and test splits. On the
+untuned sequence test it reaches 96.5% token accuracy and 94.3% complete-sequence
+accuracy. The test lacks meaningful district and settlement coverage and the
+source provenance still requires confirmation, so this is not evidence of
+nationwide production accuracy. See `training/README.md`.
 
 ## Evaluation
 
@@ -142,7 +145,7 @@ python evaluation/evaluate.py \
   --gates evaluation/release_gates.json
 ```
 
-The current baseline is 78.8% exact-address match and 94.9% micro field F1. The
+The current baseline is 80.4% exact-address match and 95.9% micro field F1. The
 source rows have not been independently re-reviewed for v2, so these are
 engineering regression numbers—not a production or nationwide accuracy claim.
 See `evaluation/README.md` for selection rules, per-field metrics, and the path
