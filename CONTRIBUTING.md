@@ -1,47 +1,157 @@
 # Contributing
 
-Contributions should make the parser easier to trust, embed, or evaluate.
+Thank you for helping make Russian address parsing easier to inspect and trust.
+Useful contributions here are usually small: one clearly reproduced behavior,
+one bounded change, and evidence a maintainer can rerun.
 
-The v2 license has not yet been selected. Until it is, please open issues and
-share minimal reproduction examples rather than submitting substantive reusable
-code. This avoids creating additional ownership ambiguity.
+## Licensing pause on reusable code
 
-## Before opening a pull request
+No license has been selected for v2, and the scope of historical publication
+permission and contributions is still being confirmed. Until the maintainer
+records that decision, please contribute through:
 
-- Link an existing issue or open one describing the behavior first.
-- Keep the change narrowly scoped.
-- Add a regression test for parsing changes.
-- Preserve original character spans.
-- Report before/after output for new examples.
-- Do not add a runtime dependency without prior discussion.
-- Run `pytest`.
+- bug and parsing-failure reports;
+- minimal reproduction inputs and expected fields;
+- data provenance information;
+- review comments;
+- documentation corrections that do not introduce reusable implementation.
 
-AI-assisted contributions are welcome. The pull-request author must understand
-the change, verify it, respond to review, and remain accountable for it.
+Do not submit substantive reusable code yet. Maintainers should close or defer
+such pull requests rather than silently accumulating more ownership ambiguity.
+See [`LICENSING.md`](LICENSING.md).
 
-## Changes requiring maintainer discussion
+## Choose the right report
 
-Discuss these before implementation:
+- [Bug report](https://github.com/shigabeev/address-normalizer/issues/new?template=bug-report.yml):
+  installation, API, CLI, packaging, or deterministic runtime failures.
+- [Parsing failure](https://github.com/shigabeev/address-normalizer/issues/new?template=parsing-failure.yml):
+  one address whose extracted fields, spans, warning, or alternative are
+  unexpected.
+- [Feature request](https://github.com/shigabeev/address-normalizer/issues/new?template=feature-request.yml):
+  a user problem, not a preselected implementation.
+- [Data provenance](https://github.com/shigabeev/address-normalizer/issues/new?template=data-provenance.yml):
+  source, permission, redistribution, or benchmark-integrity information.
+- Security-sensitive reports follow [`SECURITY.md`](SECURITY.md), never a public
+  issue with exploit or private-address details.
 
-- public API changes;
-- model or training-data replacement;
-- confidence semantics;
+Remove or replace personal data before posting. A synthetic address that
+reproduces the behavior is preferable.
+
+## Before a pull request
+
+After the licensing pause is lifted:
+
+1. link an existing issue or provide a complete, locally reproducible bug;
+2. agree on scope before public API, model, data, dependency, or workflow work;
+3. keep the change narrowly focused and preserve unrelated behavior;
+4. add a test that fails before the fix and passes afterward;
+5. explain the behavior in your own words, including maintenance implications;
+6. report before/after output and relevant benchmark domains;
+7. run the checks below and include exact results in the pull request.
+
+A benchmark delta alone is not a product improvement. Parser or model changes
+must not trade away another domain, field, original offsets, ambiguity, or
+unparsed evidence to improve an aggregate score.
+
+## Local setup and checks
+
+Runtime development needs no third-party package dependency:
+
+```bash
+python -m pip install -e .
+pytest
+```
+
+For a parsing change, show the focused failing test first, then run the complete
+suite. For example:
+
+```bash
+pytest tests_v2/test_api.py -q
+pytest
+```
+
+For documentation examples:
+
+```bash
+python examples/basic.py
+printf '%s\n' 'Ополченская 5-30' | python examples/jsonl_etl.py
+python -m compileall -q examples
+```
+
+Model, evaluation, build, and release work has additional checks and provenance
+requirements. Read
+[`training/README.md`](https://github.com/shigabeev/address-normalizer/blob/master/training/README.md)
+and
+[`evaluation/README.md`](https://github.com/shigabeev/address-normalizer/blob/master/evaluation/README.md)
+before starting it. Large
+external data and its preparation dependencies must stay outside the runtime
+package.
+
+## Parsing-change evidence
+
+Include:
+
+- the smallest synthetic or redacted input that reproduces the problem;
+- expected fields and `[start, end)` offsets;
+- output before and after the change;
+- a regression test;
+- an explanation of warnings, alternatives, and unparsed content affected;
+- results for every relevant committed regression gate.
+
+Do not copy examples from a sealed test set into tests or tune against that set
+while continuing to call it untouched. Never commit private addresses or
+unreviewed production logs.
+
+## Model or benchmark changes
+
+Discuss these in an issue before implementation. A proposal must identify:
+
+- source, publisher, version/revision, URL, and retrieval date;
+- license or terms and whether redistribution is allowed;
+- transformations and filters;
+- split and deduplication policy, including leakage prevention;
+- exact reproduction command and checksums;
+- before/after per-domain and per-field metrics;
+- model and wheel size deltas;
+- known regressions and rejected alternatives.
+
+Keep historical, noisy-window, nationwide clean-address, and official-registry
+scores separate. Do not select only the friendliest metric or average
+incompatible domains.
+
+## Changes requiring maintainer agreement
+
+Ask before changing:
+
+- public API or serialized result shape;
+- supported Python versions;
+- confidence semantics or review policy;
 - runtime dependencies;
-- release workflows;
+- model, training data, or data preparation;
 - FIAS/GAR integration inside the core package;
-- large generated or binary files.
+- CI, permissions, release, or publishing workflows;
+- large generated or binary artifacts.
 
-Model changes must include the training command, data provenance, evaluation
-delta, and model-size delta.
+The core package must remain small, dependency-free at runtime, offline, and
+independent of any bundled FIAS/GAR database or service.
 
-## Good first issues
+## Human accountability and automated assistance
 
-Appropriate first contributions include:
+AI-assisted contributions can be reviewed after the licensing pause. The human
+author must be able to:
 
-- a synthetic failing address plus a regression test;
-- malformed-input and numeric-grammar cases;
-- typing and documentation improvements;
-- packaging compatibility;
-- integration recipes that do not affect the core runtime.
+- explain every behavior change and why the approach is maintainable;
+- identify the test that proves the bug and fix;
+- reproduce claimed benchmark results;
+- answer review questions and support follow-up repairs;
+- confirm that submitted code and data may be contributed.
 
-Generated busywork is not useful. A small, well-tested correction is.
+Unexplained generated changes, benchmark-only optimizations, bulk formatting,
+and changes whose author cannot maintain them will be closed.
+
+## Review and triage
+
+Maintainers use [`docs/triage.md`](docs/triage.md) for labels, duplicate handling,
+security routing, benchmark evidence, and review boundaries. Bounded starter
+proposals are in [`docs/good-first-issues.md`](docs/good-first-issues.md); code
+tasks there remain on hold until the license decision.

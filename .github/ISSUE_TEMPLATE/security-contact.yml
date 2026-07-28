@@ -1,0 +1,20 @@
+name: Private security contact request
+description: Request a private channel only when GitHub private vulnerability reporting is unavailable
+title: "[Security contact] Private channel requested"
+labels:
+  - security
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not describe the vulnerability here. This public issue only asks a
+        maintainer to arrange a private reporting channel. Use GitHub's private
+        vulnerability report instead whenever it is available.
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Public disclosure check
+      options:
+        - label: I have included no vulnerability details, exploit, secret, private address, or other sensitive information in this issue.
+          required: true

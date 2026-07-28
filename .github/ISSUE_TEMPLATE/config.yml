@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/shigabeev/address-normalizer/security/policy
+    about: Read the private-reporting policy; do not disclose vulnerabilities publicly.
+  - name: Support and usage questions
+    url: https://github.com/shigabeev/address-normalizer/blob/master/SUPPORT.md
+    about: Check support scope and troubleshooting before opening an issue.
