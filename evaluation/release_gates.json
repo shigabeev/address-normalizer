@@ -1,0 +1,19 @@
+{
+  "name": "2.0.0a1 legacy-reference regression gate",
+  "scope": "Extraction-only rows from the legacy Good worksheet; not an independently reviewed nationwide benchmark.",
+  "minimum_rows": 500,
+  "minimum_metrics": {
+    "exact_address_rate": 0.8,
+    "no_unparsed_rate": 0.75,
+    "micro.f1": 0.955,
+    "fields.postal_code.f1": 0.999,
+    "fields.region.f1": 0.9,
+    "fields.city.f1": 0.985,
+    "fields.street.f1": 0.955,
+    "fields.street_type.f1": 0.9,
+    "fields.house_num.f1": 0.95,
+    "fields.corpus.f1": 0.95,
+    "fields.structure.f1": 0.96,
+    "fields.apartment.f1": 0.85
+  }
+}

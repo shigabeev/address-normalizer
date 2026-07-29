@@ -1,0 +1,153 @@
+{
+  "rows": 30,
+  "positive_rows": 18,
+  "negative_rows": 12,
+  "scope": "small, manually authored detection-behavior fixture; suitable for regression, not a production accuracy claim",
+  "metric_definitions": {
+    "exact_span_micro": "one-to-one precision, recall, and F1 requiring exact message boundaries",
+    "overlap_span_micro": "one-to-one precision, recall, and F1 requiring any character overlap; reported separately because it is lenient",
+    "exact_message_rate": "fraction of messages where the complete ordered span list is exact",
+    "negative_message_specificity": "fraction of annotated negative messages returning no spans"
+  },
+  "exact_span_micro": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "overlap_span_micro": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "exact_message_rate": 1.0,
+  "negative_message_specificity": 1.0,
+  "scenarios": {
+    "negative_cue_without_value": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "negative_datetime": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "negative_distant_number_after_cue": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "negative_house_only": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "negative_lexical_overlap": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "negative_network_address": {
+      "rows": 2,
+      "exact_messages": 2,
+      "exact_message_rate": 1.0
+    },
+    "negative_numeric_range": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "negative_order_number": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "negative_street_marker_homonym": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "negative_street_without_building": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "negative_unmarked_without_cue": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "positive_bare_house": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "positive_compact": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "positive_compound_number": {
+      "rows": 2,
+      "exact_messages": 2,
+      "exact_message_rate": 1.0
+    },
+    "positive_cue_unmarked": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "positive_explicit": {
+      "rows": 2,
+      "exact_messages": 2,
+      "exact_message_rate": 1.0
+    },
+    "positive_full": {
+      "rows": 2,
+      "exact_messages": 2,
+      "exact_message_rate": 1.0
+    },
+    "positive_multiple": {
+      "rows": 2,
+      "exact_messages": 2,
+      "exact_message_rate": 1.0
+    },
+    "positive_ordinal": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "positive_parenthesized": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "positive_street_type": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "positive_suffix_marker": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    },
+    "positive_tokenized_punctuation": {
+      "rows": 2,
+      "exact_messages": 2,
+      "exact_message_rate": 1.0
+    },
+    "positive_unicode": {
+      "rows": 1,
+      "exact_messages": 1,
+      "exact_message_rate": 1.0
+    }
+  },
+  "failure_sample": []
+}

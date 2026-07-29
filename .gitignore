@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.cache/
+.venv/
+build/
+dist/
+/artifact-manifest.json
+/release-artifact/

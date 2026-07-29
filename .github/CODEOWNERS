@@ -1,0 +1,10 @@
+* @shigabeev
+
+/.github/ @shigabeev
+/LICENSING.md @shigabeev
+/SECURITY.md @shigabeev
+/MANIFEST.in @shigabeev
+/evaluation/ @shigabeev
+/src/address_normalizer/data/ @shigabeev
+/training/ @shigabeev
+/pyproject.toml @shigabeev

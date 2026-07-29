@@ -1,0 +1,76 @@
+{
+  "format_version": 1,
+  "source": {
+    "repository": "deepparse/worldwide-addresses",
+    "configuration": "ru",
+    "license": "CC BY 4.0",
+    "revision": "cb61e5e49db87f8c3586b5494149f612460f8992",
+    "url": "https://huggingface.co/datasets/deepparse/worldwide-addresses/resolve/cb61e5e49db87f8c3586b5494149f612460f8992/ru/chunk-0.parquet",
+    "rows": 13152918,
+    "bytes": 371595309,
+    "sha256": "e61981a059967a1062fe445fa5ffe745a661f8b4afcec59a60c3cbb4f1444110"
+  },
+  "policy": {
+    "purpose": "external clean-address training/evaluation corpus; not bundled in the runtime package",
+    "filter": "Russian rows with 1-64 whitespace tokens, known tags, matching token/tag lengths, and at least one StreetName, StreetNumber, or Unit tag",
+    "deduplication": "first row for each BLAKE2b-128 hash of case-folded, ё/е-folded, whitespace-normalized address text",
+    "grouping": "SHA-256 of structured province/county/district/municipality/suburb/street/house identity; unit and presentation fields are excluded so one building cannot cross splits",
+    "split": "group hash buckets: train 90%, validation 5%, test 5%",
+    "sample": "lowest deterministic SHA-256 ranks from the sealed test split",
+    "ignored_labels": [
+      "Country",
+      "Suburb"
+    ]
+  },
+  "filter_counts": {
+    "source_rows": 13152918,
+    "rejected_administrative_only": 5403275,
+    "eligible_rows": 7749643,
+    "unique_usable_rows": 6314158,
+    "duplicate_rows_removed": 1435485
+  },
+  "split_counts": {
+    "train": 5681842,
+    "validation": 316586,
+    "test": 315730
+  },
+  "tier_counts": {
+    "street_house_unit": 679076,
+    "street_house": 4614613,
+    "street_only": 984676,
+    "number_or_unit_only": 35793
+  },
+  "split_tier_counts": {
+    "test/number_or_unit_only": 1767,
+    "test/street_house": 230504,
+    "test/street_house_unit": 33894,
+    "test/street_only": 49565,
+    "train/number_or_unit_only": 32226,
+    "train/street_house": 4152669,
+    "train/street_house_unit": 611003,
+    "train/street_only": 885944,
+    "validation/number_or_unit_only": 1800,
+    "validation/street_house": 231440,
+    "validation/street_house_unit": 34179,
+    "validation/street_only": 49167
+  },
+  "artifacts": {
+    "filtered_parquet": {
+      "filename": "deepparse-ru-usable-cb61e5e4.parquet",
+      "rows": 6314158,
+      "bytes": 557321339,
+      "sha256": "2ca55950ea5a4d08fbfeb55d2f798adb1dcae1d4a6dd61372f6c707928e625e8"
+    },
+    "test_sample_jsonl_gz": {
+      "filename": "deepparse-ru-test-100k-cb61e5e4.jsonl.gz",
+      "rows": 100000,
+      "bytes": 10981774,
+      "sha256": "349140469f42a73f95fb58c9c37b2148c57e3373fed5c0fc265397800c72022b"
+    }
+  },
+  "limitations": [
+    "The source is curated from open geographic address data and does not reproduce misspellings or punctuation-heavy user input.",
+    "Country and Suburb have no direct public package field and are kept as source context but mapped to O.",
+    "This deterministic test split becomes tuning data after its failures are used to change the parser; reserve another test source before making a final production claim."
+  ]
+}
