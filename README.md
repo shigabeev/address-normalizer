@@ -107,6 +107,26 @@ flowchart LR
 Direct address strings can skip detection. The parser itself ends at
 `ParsedAddress`; review and resolution remain application responsibilities.
 
+### What the ML stack actually is
+
+This is not a neural network, transformer, LLM, spaCy, scikit-learn, PyTorch,
+or TensorFlow stack. It is a dependency-free hybrid:
+
+1. regular-expression tokenization and explicit address grammar;
+2. marker and numeric extraction rules;
+3. a 37 KB sparse linear-chain tagger for only the residual unmarked words;
+4. Viterbi decoding and deterministic post-processing.
+
+The learned tagger is an epoch-averaged structured perceptron with six labels:
+`O`, `REGION`, `DISTRICT`, `CITY`, `SETTLEMENT`, and `STREET`. Its JSON
+artifact contains sparse lexical/context feature weights and transition
+weights. Message detection is currently rule-based; FIAS/GAR lookup is an
+optional downstream application stage.
+
+See [ML stack and runtime boundaries](docs/ml-stack.md) for the features,
+training split, artifact details, and the recommended production separation
+between detection, extraction, and registry resolution.
+
 ## API reference
 
 The public package exports:
@@ -318,13 +338,16 @@ Additional context prevents misleading comparisons:
 See
 [`evaluation/README.md`](https://github.com/shigabeev/address-normalizer/blob/master/evaluation/README.md)
 for pinned sources, exact filters, per-field results, commands, and limitations.
+[`evaluation/RESULTS.md`](https://github.com/shigabeev/address-normalizer/blob/master/evaluation/RESULTS.md)
+indexes every committed benchmark report.
 The historical regression gate is reproducible without downloading large
 corpora:
 
 ```bash
 python evaluation/evaluate.py \
   --data evaluation/legacy_reference_500.jsonl \
-  --gates evaluation/release_gates.json
+  --gates evaluation/release_gates.json \
+  --output evaluation/legacy_reference_500_report.json
 ```
 
 The external benchmark commands require separately installed data-preparation

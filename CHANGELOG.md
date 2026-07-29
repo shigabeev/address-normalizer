@@ -19,6 +19,8 @@ and compact-model provenance blockers in `LICENSING.md`.
 - Compact bundled sequence model for residual unmarked text.
 - Independent evaluation reports with explicit metric-family names and release
   regression gates; legacy report keys remain compatibility aliases.
+- A committed results index, full historical benchmark report, and explicit
+  documentation of the hybrid rules/structured-perceptron runtime stack.
 - A complete 500-row diagnostic CSV with per-field outcomes, scenario columns,
   triage hypotheses, and a representative failure summary.
 - Distribution inspection, isolated-wheel smoke tests, size limits, and

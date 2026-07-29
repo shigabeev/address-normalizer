@@ -46,6 +46,12 @@ def test_legacy_release_gate_passes():
     assert "exact component values" in (
         report["metric_definitions"]["exact_component_value_micro"]
     )
+    committed = json.loads(
+        (ROOT / "evaluation/legacy_reference_500_report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert committed == report
 
 
 @pytest.mark.parametrize(

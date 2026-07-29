@@ -10,6 +10,9 @@ Do not use parsing scores as evidence that the package can find addresses in
 arbitrary prose. Do not use the small detection fixture as a production
 accuracy claim.
 
+[`RESULTS.md`](RESULTS.md) indexes every committed JSON/CSV result artifact and
+the command that reproduces it.
+
 ## What parsing accuracy currently means
 
 The historical regression requires case-insensitive exact component values
@@ -51,13 +54,16 @@ Run the alpha regression gate:
 ```bash
 python evaluation/evaluate.py \
   --data evaluation/legacy_reference_500.jsonl \
-  --gates evaluation/release_gates.json
+  --gates evaluation/release_gates.json \
+  --output evaluation/legacy_reference_500_report.json
 ```
 
 This is the portable release gate: it uses only the committed 500-row fixture,
 requires no download, and runs as part of the normal test suite. The report
 names its exact-value aggregate `exact_component_value_micro`; the legacy
 `micro` key remains as a compatibility alias for existing gate files.
+The complete generated result is committed as
+[`legacy_reference_500_report.json`](legacy_reference_500_report.json).
 
 The `2.0.0a1` baseline is:
 
