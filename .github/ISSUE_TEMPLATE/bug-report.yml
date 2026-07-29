@@ -16,7 +16,7 @@ body:
     attributes:
       label: Package version or commit
       description: Output of `python -c "import address_normalizer; print(address_normalizer.__version__)"` and, for a checkout, the commit SHA.
-      placeholder: 2.0.0a1 / abc1234
+      placeholder: 2.0.0a2 / abc1234
     validations:
       required: true
   - type: input

@@ -1,8 +1,7 @@
 # Support
 
-`address-normalizer` v2 is currently an unreleased alpha maintained on a
-best-effort basis. There is no paid support channel, guaranteed response time,
-or supported PyPI release yet.
+`address-normalizer` v2 is an alpha maintained on a best-effort basis. There is
+no paid support channel or guaranteed response time.
 
 Before opening an issue:
 
@@ -34,5 +33,4 @@ The project cannot provide:
   decision.
 
 Security-sensitive reports follow [`SECURITY.md`](SECURITY.md) and must not be
-disclosed in a public issue. Substantive reusable pull requests remain paused
-until the v2 licensing scope is settled.
+disclosed in a public issue.

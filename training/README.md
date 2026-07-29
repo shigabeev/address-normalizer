@@ -47,12 +47,12 @@ tuning runs, class coverage, failures, and end-to-end comparison.
 that regeneration remains reproducible and comparisons do not silently change
 after the bundled model is replaced.
 
-## Provenance limitation
+## Provenance
 
-The source workbook was already published in the historical repository, but its
-right to be used for redistribution of a derived model still needs explicit
-confirmation. Do not publish the wheel or model until that and the v2 license
-are resolved.
+The maintainer authorized redistribution of the historical source workbook,
+its committed 500-row derivative, and the compact model under GPL-3.0-only.
+The decision, source commit, deterministic generation path, and external-data
+boundary are recorded in `LICENSING.md`.
 
 The external preparation tools now expose 5,681,842 Deepparse training rows and
 276,368 historical Moscow-registry training rows in group-disjoint splits.

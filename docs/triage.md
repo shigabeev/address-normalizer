@@ -40,7 +40,6 @@ for a private corpus dump in a public issue.
 | `security` | `B60205` | Public tracking only after private disclosure is safe |
 | `good first issue` | `7057FF` | Bounded task with exact acceptance criteria and mentor |
 | `help wanted` | `008672` | Maintainer has defined scope and will review work |
-| `blocked: licensing` | `000000` | Reusable contribution cannot proceed before license decision |
 | `blocked: decision` | `FBCA04` | Explicit maintainer/product choice is required |
 | `needs-reproduction` | `FEF2C0` | Report lacks a locally repeatable case |
 | `needs-provenance` | `F9D0C4` | Data/model source or permission evidence is incomplete |
@@ -69,8 +68,7 @@ privacy, expected spans, and the licensing/contribution policy allow it.
 
 ## Pull-request review
 
-Close or defer substantive reusable pull requests while the licensing pause in
-`LICENSING.md` remains. For eligible changes, require:
+For eligible changes, require:
 
 - a linked issue or complete reproduced bug;
 - a test that demonstrates failure before and success afterward;

@@ -2,13 +2,12 @@
 
 ## Supported versions
 
-Version 2 is currently an unreleased alpha. Security fixes are prepared on the
-active v2 branch; there is no supported PyPI release or security maintenance
-window yet. The historical v1 Elasticsearch application is archived and is not
-supported as a deployed service.
+| Version | Supported |
+| --- | --- |
+| Latest 2.0 pre-release | Yes, best effort |
+| Historical v1 Elasticsearch application | No |
 
-This policy will name supported release lines when the first public v2 release
-exists.
+The alpha does not yet have a guaranteed security response or maintenance SLA.
 
 ## Report privately
 

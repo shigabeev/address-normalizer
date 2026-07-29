@@ -1,7 +1,6 @@
 # Suggested repository settings
 
-These are maintainer-facing suggestions. They are not applied automatically and
-do not imply that v2 has been released or licensed.
+These are maintainer-facing settings for the GPL-3.0-only v2 package.
 
 ## About section
 
@@ -60,8 +59,8 @@ Create the labels in [`docs/triage.md`](../docs/triage.md) manually or with an
 explicitly reviewed maintainer script. No GitHub API calls have been made for
 these suggestions.
 
-## Release blocker
+## Release state
 
-Do not mark the repository as licensed, publish a package, or invite reusable
-code contributions until the maintainer resolves and records the ownership,
-license-scope, and data/model provenance decisions in `LICENSING.md`.
+The license scope and data/model provenance decisions are recorded in
+`LICENSING.md`. Publishing still requires the tagged build, artifact, and
+protected-environment checks in `docs/releasing.md`.

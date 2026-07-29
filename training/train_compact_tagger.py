@@ -344,8 +344,8 @@ def train(
 
     report = {
         "scope": (
-            "group-disjoint real-address model evaluation; the source workbook "
-            "still requires licensing/provenance confirmation"
+            "group-disjoint real-address model evaluation; source and "
+            "derived-model provenance are recorded in LICENSING.md"
         ),
         "dataset": dataset_name,
         "dataset_sha256": dataset_sha256,

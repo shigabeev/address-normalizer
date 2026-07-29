@@ -1,7 +1,6 @@
-> **Licensing pause:** substantive reusable code cannot be accepted until the
-> maintainer records the v2 licensing scope. Issue reports, reproductions,
-> provenance information, and non-substantive documentation corrections remain
-> welcome. See `LICENSING.md`.
+> Contributions are accepted under GPL-3.0-only. Confirm that every submitted
+> code, data, model, and generated artifact may be contributed under that
+> license. See `LICENSING.md`.
 
 ## Linked issue or reproduced bug
 

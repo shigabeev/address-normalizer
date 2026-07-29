@@ -1,4 +1,4 @@
-name: Release candidate build (publishing disabled)
+name: Build and publish release
 
 on:
   workflow_dispatch:
@@ -7,8 +7,16 @@ on:
         description: "Expected PEP 440 package version (for example, 2.0.0a2)"
         required: true
         type: string
+      repository:
+        description: "Package index"
+        required: true
+        default: testpypi
+        type: choice
+        options:
+          - testpypi
+          - pypi
 
-run-name: Release candidate ${{ inputs.version }} (no publish)
+run-name: Release ${{ inputs.version }} to ${{ inputs.repository }}
 
 permissions:
   contents: read
@@ -49,8 +57,8 @@ jobs:
           python -m pip install --no-deps .
           python -m pytest
           python -m mypy
-      - name: Verify known licensing blocker
-        run: python scripts/check_license.py --expect-blocked
+      - name: Verify license and model provenance
+        run: python scripts/check_license.py --require-publishable
       - name: Build and inspect candidate
         env:
           EXPECTED_VERSION: ${{ inputs.version }}
@@ -72,19 +80,14 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  # SECURITY CONTROL: this job is intentionally unreachable. After the
-  # maintainer resolves LICENSING.md and model provenance, enable it in a
-  # dedicated reviewed change and protect the `pypi` environment with required
-  # approvers. Merely running this workflow can never publish the package.
   publish:
-    if: ${{ false }}
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: pypi
-      url: https://pypi.org/p/address-normalizer
+      name: ${{ inputs.repository }}
+      url: ${{ inputs.repository == 'pypi' && 'https://pypi.org/p/address-normalizer' || 'https://test.pypi.org/p/address-normalizer' }}
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - name: Check out the exact candidate source
@@ -110,5 +113,17 @@ jobs:
         uses: pypa/gh-action-pypi-publish@ba38be9e461d3875417946c167d0b5f3d385a247 # release/v1
         with:
           packages-dir: release-artifact/packages/
+          repository-url: ${{ inputs.repository == 'testpypi' && 'https://test.pypi.org/legacy/' || 'https://upload.pypi.org/legacy/' }}
           skip-existing: false
           verbose: true
+      - name: Create GitHub release
+        if: ${{ inputs.repository == 'pypi' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            release-artifact/packages/* \
+            release-artifact/artifact-manifest.json \
+            --verify-tag \
+            --title "address-normalizer ${GITHUB_REF_NAME}" \
+            --generate-notes

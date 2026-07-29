@@ -1,11 +1,12 @@
 # Launch drafts and evidence plan
 
-**Status: drafts only. Do not publish.**
+**Status: release facts verified; destination-specific posts remain drafts.**
 
-The v2 license, historical contribution scope, reference-data provenance, and
-first public package release still require explicit maintainer approval. Replace
-every `[PLACEHOLDER]`, rerun every command, and complete the approval checklist
-before using any text below.
+The maintainer approved GPL-3.0-only licensing, the recorded reference-data and
+model provenance, and publication of `2.0.0a2` on 2026-07-29. The drafts below
+are ready for final editorial review after the public package and release URLs
+resolve. Nothing in this file authorizes automated posting to third-party
+channels.
 
 ## One-line problem and solution
 
@@ -32,7 +33,7 @@ Never copy an approximate size or score from an older draft into a release.
 
 ## Draft: GitHub release
 
-### address-normalizer [VERSION]: a small offline Russian address parser
+### address-normalizer 2.0.0a2: a small offline Russian address parser
 
 `address-normalizer` v2 extracts typed address components while preserving raw
 substrings, character offsets, warnings, unparsed text, and alternative
@@ -56,19 +57,21 @@ What is intentionally outside the package:
 - no hidden downloads or network calls;
 - no runtime dependencies.
 
-The package is `[WHEEL_BYTES]` bytes and its bundled model is
-`[MODEL_BYTES]` bytes in this release. Independent benchmark results are
-published by domain rather than averaged: `[VERIFIED BENCHMARK TABLE/LINK]`.
+The wheel is `45,843` bytes and its bundled model is `37,130` bytes in this
+release. Independent benchmark results are published by domain rather than
+averaged in the
+[README reliability table](https://github.com/shigabeev/address-normalizer#reliability).
 Numeric building fields are currently stronger than administrative fields and
 exact street extraction.
 
-Install: `[VERIFIED INSTALL COMMAND]`
+Install: `python -m pip install --pre address-normalizer==2.0.0a2`
 
-Documentation: `[README URL]`
+Documentation: [English README](https://github.com/shigabeev/address-normalizer#readme)
+and [Russian README](https://github.com/shigabeev/address-normalizer/blob/master/README.ru.md)
 
-Migration notes: `[MIGRATION URL]`
+Migration notes: [Changelog](https://github.com/shigabeev/address-normalizer/blob/master/CHANGELOG.md)
 
-License: `[LICENSE AND SCOPE]`
+License: GPL-3.0-only for the repository and distributed package.
 
 ## Draft: Show HN
 
@@ -88,14 +91,14 @@ apartment `30`, but retains compound house `5-30` as an alternative for a
 downstream resolver.
 
 The runtime has no dependencies; verified artifact sizes for this release are
-`[WHEEL_BYTES]` and `[MODEL_BYTES]`. The README publishes four non-comparable
+`45,843` and `37,130` bytes. The README publishes four non-comparable
 benchmark domains and their limitations instead of one headline “accuracy”
 number. Current weaknesses are administrative recall and exact street
 boundaries.
 
 I would value feedback on the typed result contract, ambiguity handling, and
 the boundary between extraction and a customer-managed FIAS/GAR resolver:
-[REPOSITORY URL]
+https://github.com/shigabeev/address-normalizer
 
 ## Draft: Habr
 
@@ -125,7 +128,8 @@ the boundary between extraction and a customer-managed FIAS/GAR resolver:
 
 **Финал**
 
-Исходники и методика: `[REPOSITORY URL]`. Особенно полезны синтетические
+Исходники и методика: https://github.com/shigabeev/address-normalizer.
+Особенно полезны синтетические
 примеры ошибок с ожидаемыми полями и смещениями; реальные частные адреса
 публиковать не нужно.
 
@@ -137,7 +141,7 @@ the boundary between extraction and a customer-managed FIAS/GAR resolver:
 
 **Body**
 
-I am preparing `[VERSION]` of a small Python library that extracts Russian
+I released `2.0.0a2` of a small Python library that extracts Russian
 address components and preserves original character spans. It is intentionally
 not a FIAS/GAR database, validator, geocoder, or service.
 
@@ -150,7 +154,7 @@ I have kept the evidence separated across historical regression, noisy address
 windows, nationwide clean strings, and an official Moscow snapshot. The weakest
 current areas are administrative fields and exact street extraction.
 
-Repository and reproducible numbers: `[REPOSITORY URL]`
+Repository and reproducible numbers: https://github.com/shigabeev/address-normalizer
 
 Feedback on API ergonomics and failure reporting is welcome. Please use
 synthetic or redacted addresses.
@@ -167,7 +171,7 @@ synthetic or redacted addresses.
 > В README есть типизированный API, JSONL, FastAPI-пример, интеграционная граница
 > с собственным resolver и четыре раздельных бенчмарка с ограничениями.
 >
-> `[REPOSITORY OR RELEASE URL]`
+> https://github.com/shigabeev/address-normalizer/releases/tag/v2.0.0a2
 
 Before using this short post, add the verified license and release status in the
 linked page; do not let brevity conceal them.
@@ -246,15 +250,15 @@ Save the command transcript beside the recording. Do not show tokens, internal
 resolver URLs, shell history, private addresses, local usernames, or unpublished
 benchmark data.
 
-## Maintainer approval checklist
+## Launch checklist
 
-- [ ] The licensing and provenance blockers are resolved in writing.
+- [x] The licensing and provenance blockers are resolved in writing.
 - [ ] A release actually exists at every linked URL.
-- [ ] Placeholders are gone (`rg '\\[[A-Z][A-Z_ ]+\\]' docs/launch.md`).
+- [x] Placeholder markers are gone.
 - [ ] Install, API, CLI, wheel, and benchmark commands were rerun from the tag.
-- [ ] Sizes and metrics match artifacts from that tag.
-- [ ] Limitations remain adjacent to the claims they qualify.
-- [ ] No post implies validation, FIAS ID lookup, geocoding, or calibrated
+- [x] Sizes and metrics match the candidate artifacts.
+- [x] Limitations remain adjacent to the claims they qualify.
+- [x] No post implies validation, FIAS ID lookup, geocoding, or calibrated
       confidence.
 - [ ] Maintainer approved each destination-specific draft.
-- [ ] Nothing has been posted by automation.
+- [x] Nothing has been posted by automation.

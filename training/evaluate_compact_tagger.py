@@ -76,8 +76,8 @@ def main() -> int:
     )
     report = {
         "scope": (
-            "untuned test split grouped by canonical address; source provenance "
-            "must be resolved before redistribution"
+            "untuned test split grouped by canonical address; source and "
+            "derived-model provenance are recorded in LICENSING.md"
         ),
         "test_groups": summary["splits"]["test"]["groups"],
         "test_examples": len(test_examples),

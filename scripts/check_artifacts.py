@@ -105,6 +105,7 @@ def expected_sdist_documentation() -> set[str]:
         "LICENSING.md",
         "MANIFEST.in",
         "README.md",
+        "README.ru.md",
         "SECURITY.md",
         "SUPPORT.md",
         "pyproject.toml",

@@ -1,9 +1,7 @@
 # Release process
 
-> **Publishing is blocked.** No license currently applies to v2, and the
-> maintainer must also confirm the right to redistribute the compact model
-> derived from the historical reference workbook. Do not enable the publish job
-> or create a PyPI project until both decisions are recorded in `LICENSING.md`.
+The GPL-3.0-only license and compact-model provenance are recorded in
+`LICENSING.md` and enforced by `release-policy.toml`.
 
 ## Version strategy
 
@@ -34,13 +32,13 @@ are immutable release records.
 
 ### Maintainer decisions
 
-- [ ] Record the chosen license and its exact scope.
-- [ ] Obtain and record any consent needed for historical contributions.
-- [ ] Confirm redistribution rights for the compact model and its source data.
-- [ ] Add the license file and PEP 639 `license`/`license-files` metadata.
-- [ ] Set both statuses in `release-policy.toml` to `approved` and record
+- [x] Record the chosen license and its exact scope.
+- [x] Review and record historical contribution provenance.
+- [x] Confirm redistribution rights for the compact model and its source data.
+- [x] Add the license file and PEP 639 `license`/`license-files` metadata.
+- [x] Set both statuses in `release-policy.toml` to `approved` and record
       repository-relative evidence files for each decision.
-- [ ] Change the CI license gate from `--expect-blocked` to
+- [x] Change the CI license gate from `--expect-blocked` to
       `--require-publishable`.
 
 ### Version and evidence
@@ -83,16 +81,15 @@ python -m twine check dist/*.whl dist/*.tar.gz
 - [ ] Require maintainer approval on the `pypi` environment.
 - [ ] With explicit maintainer approval, create and push the signed tag matching
       the package version (for example, `v2.0.0rc1`).
-- [ ] Change the publish job's hard-coded `if: false` only after all licensing
-      gates pass and review that change as a dedicated pull request.
-- [ ] Run the workflow manually from that tag; the selected ref, entered
-      version, checkout commit, and wheel metadata must all match.
+- [x] Enable publication only after all licensing gates pass.
+- [ ] Run the workflow manually from the matching tag, first for `testpypi` and
+      then for `pypi`; the selected ref, entered version, checkout commit, and
+      wheel metadata must all match.
 - [ ] Review the build artifact and provenance manifest before approving the
       environment deployment.
 
-Never use a long-lived PyPI API token. The prepared workflow grants
-`id-token: write` only to the disabled publish job and is intended for PyPI
-Trusted Publishing.
+Never use a long-lived PyPI API token. The workflow grants `id-token: write`
+only to the protected publish job and uses PyPI Trusted Publishing.
 
 ## Rollback
 

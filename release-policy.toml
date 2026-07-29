@@ -1,10 +1,16 @@
 schema_version = 1
 
 [publication]
-# These are machine-enforced release blockers, not maintainer decisions.
-# Change either status only after recording the decision and evidence in the
-# repository. Publication requires both statuses to be "approved".
-license_status = "blocked"
-license_evidence = []
-model_provenance_status = "blocked"
-model_provenance_evidence = []
+# Maintainer decisions and their repository-local evidence. Publication requires
+# both statuses to remain "approved".
+license_status = "approved"
+license_evidence = ["LICENSE", "LICENSING.md"]
+model_provenance_status = "approved"
+model_provenance_evidence = [
+  "LICENSING.md",
+  "ref/references.xlsx",
+  "evaluation/legacy_reference_500.jsonl",
+  "training/README.md",
+  "training/model_evaluation.json",
+  "src/address_normalizer/data/model.json",
+]

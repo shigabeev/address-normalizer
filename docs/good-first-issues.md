@@ -4,9 +4,8 @@ These are issue drafts, not work already authorized. A maintainer should assign
 an owner, confirm the acceptance criteria still match `main`, and create the
 issue before adding `good first issue`.
 
-The v2 licensing decision is unresolved. The two evidence-only tasks below can
-be opened now. Proposals containing reusable tests or code must keep
-`blocked: licensing` until contributions can be accepted.
+All proposals are ready for discussion under the repository's GPL-3.0-only
+contribution terms.
 
 ## Available now: minimal missing-marker failure set
 
@@ -50,7 +49,7 @@ that operate different FIAS/GAR indexes.
 - Suggestions do not add FIAS/GAR data, authentication policy, or a network
   dependency to the package.
 
-## After licensing: CLI stdin and JSONL contract tests
+## CLI stdin and JSONL contract tests
 
 **Why it matters:** The CLI is the smallest integration surface for shell and
 batch users, but its line-preservation behavior should be executable
@@ -70,7 +69,7 @@ documentation.
 - Tests invoke the installed entry point or the documented module boundary.
 - No network, temp data outside the test directory, or timing assertion.
 
-## After licensing: public typed-dictionary example check
+## Public typed-dictionary example check
 
 **Why it matters:** `as_dict()` is the JSON boundary and exports typed-dictionary
 shapes. A small checked example can catch documentation drift.
@@ -91,7 +90,7 @@ shapes. A small checked example can catch documentation drift.
 - The command is run in CI only after the maintainer agrees on the type-check
   policy.
 
-## After licensing: span-verification recipe
+## Span-verification recipe
 
 **Why it matters:** Consumers need a safe way to prove every extracted `raw`
 substring maps back to the original input.

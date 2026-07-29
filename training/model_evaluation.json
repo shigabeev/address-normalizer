@@ -1,5 +1,5 @@
 {
-  "scope": "group-disjoint real-address model evaluation; the source workbook still requires licensing/provenance confirmation",
+  "scope": "group-disjoint real-address model evaluation; source and derived-model provenance are recorded in LICENSING.md",
   "dataset": "evaluation/legacy_reference_500.jsonl",
   "dataset_sha256": "853916e36cfc5a52d06add0524ba64ca2c771073c1c4e98cd5645116e7f74588",
   "corpus": {
@@ -1053,8 +1053,21 @@
       "review_statuses": {
         "legacy_reference_not_independently_rereviewed": 21
       },
+      "metric_definitions": {
+        "exact_address_rate": "fraction of rows where every public component value matches",
+        "no_unparsed_rate": "fraction of rows with no residual word or number spans",
+        "exact_component_value_micro": "micro precision, recall, and F1 over case-insensitive exact component values after whitespace and ё/е folding"
+      },
       "exact_address_rate": 0.428571,
       "no_unparsed_rate": 0.285714,
+      "exact_component_value_micro": {
+        "tp": 101,
+        "fp": 11,
+        "fn": 18,
+        "precision": 0.901786,
+        "recall": 0.848739,
+        "f1": 0.874459
+      },
       "micro": {
         "tp": 101,
         "fp": 11,
@@ -1170,8 +1183,21 @@
       "review_statuses": {
         "legacy_reference_not_independently_rereviewed": 21
       },
+      "metric_definitions": {
+        "exact_address_rate": "fraction of rows where every public component value matches",
+        "no_unparsed_rate": "fraction of rows with no residual word or number spans",
+        "exact_component_value_micro": "micro precision, recall, and F1 over case-insensitive exact component values after whitespace and ё/е folding"
+      },
       "exact_address_rate": 0.52381,
       "no_unparsed_rate": 0.238095,
+      "exact_component_value_micro": {
+        "tp": 105,
+        "fp": 6,
+        "fn": 14,
+        "precision": 0.945946,
+        "recall": 0.882353,
+        "f1": 0.913043
+      },
       "micro": {
         "tp": 105,
         "fp": 6,

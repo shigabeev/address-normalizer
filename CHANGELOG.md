@@ -4,10 +4,11 @@ All notable user-visible changes will be recorded here. This project follows
 [Semantic Versioning](https://semver.org/) and uses
 [PEP 440](https://peps.python.org/pep-0440/) version syntax.
 
-The v2 package is not publishable until the maintainer resolves the licensing
-and compact-model provenance blockers in `LICENSING.md`.
-
 ## Unreleased
+
+No user-visible changes yet.
+
+## 2.0.0a2 - 2026-07-29
 
 ### Added
 
@@ -25,13 +26,15 @@ and compact-model provenance blockers in `LICENSING.md`.
   triage hypotheses, and a representative failure summary.
 - Distribution inspection, isolated-wheel smoke tests, size limits, and
   artifact checksum manifests.
+- GNU GPL v3 licensing, recorded model provenance, a Russian README, and
+  protected TestPyPI/PyPI Trusted Publishing.
 
 ### Changed
 
 - Source distributions now exclude evaluation corpora, training inputs, tests,
   notebooks, caches, and historical v1 assets.
 - CI covers every declared Python minor version from 3.10 through 3.14.
+- Message-span detection is explicitly presented as a conservative alpha
+  feature rather than a complete arbitrary-prose recognizer.
 
-## 2.0.0a1 - Unreleased
-
-Initial v2 alpha. This version has not been published to PyPI.
+`2.0.0a1` was an internal development version and was not published.

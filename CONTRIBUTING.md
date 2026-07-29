@@ -4,21 +4,12 @@ Thank you for helping make Russian address parsing easier to inspect and trust.
 Useful contributions here are usually small: one clearly reproduced behavior,
 one bounded change, and evidence a maintainer can rerun.
 
-## Licensing pause on reusable code
+## License
 
-No license has been selected for v2, and the scope of historical publication
-permission and contributions is still being confirmed. Until the maintainer
-records that decision, please contribute through:
-
-- bug and parsing-failure reports;
-- minimal reproduction inputs and expected fields;
-- data provenance information;
-- review comments;
-- documentation corrections that do not introduce reusable implementation.
-
-Do not submit substantive reusable code yet. Maintainers should close or defer
-such pull requests rather than silently accumulating more ownership ambiguity.
-See [`LICENSING.md`](LICENSING.md).
+The project is licensed under GNU GPL v3 (`GPL-3.0-only`). By submitting a
+contribution, you confirm that you have the right to provide it under that
+license. Code, examples, generated models, and data-derived artifacts need
+clear provenance; see [`LICENSING.md`](LICENSING.md).
 
 ## Choose the right report
 
@@ -38,8 +29,6 @@ Remove or replace personal data before posting. A synthetic address that
 reproduces the behavior is preferable.
 
 ## Before a pull request
-
-After the licensing pause is lifted:
 
 1. link an existing issue or provide a complete, locally reproducible bug;
 2. agree on scope before public API, model, data, dependency, or workflow work;
@@ -137,8 +126,7 @@ independent of any bundled FIAS/GAR database or service.
 
 ## Human accountability and automated assistance
 
-AI-assisted contributions can be reviewed after the licensing pause. The human
-author must be able to:
+AI-assisted contributions can be reviewed. The human author must be able to:
 
 - explain every behavior change and why the approach is maintainable;
 - identify the test that proves the bug and fix;
@@ -153,5 +141,4 @@ and changes whose author cannot maintain them will be closed.
 
 Maintainers use [`docs/triage.md`](docs/triage.md) for labels, duplicate handling,
 security routing, benchmark evidence, and review boundaries. Bounded starter
-proposals are in [`docs/good-first-issues.md`](docs/good-first-issues.md); code
-tasks there remain on hold until the license decision.
+proposals are in [`docs/good-first-issues.md`](docs/good-first-issues.md).

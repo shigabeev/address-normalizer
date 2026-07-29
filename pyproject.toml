@@ -8,6 +8,8 @@ dynamic = ["version"]
 description = "A small offline parser for unstructured Russian addresses"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 authors = [{ name = "Ilya Shigabeev" }]
 keywords = [
   "address",

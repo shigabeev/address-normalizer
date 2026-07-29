@@ -1,48 +1,44 @@
-# Licensing status
+# Licensing and model provenance
 
-No license currently applies to this repository, and no license has been
-selected for version 2.
+## Maintainer decision
 
-The historical tree contains no `LICENSE`, `LICENCE`, or `COPYING` file.
-Permission to publish or view source code does not by itself grant permission
-to use, modify, redistribute, sublicense, or relicense it. The history also
-contains merged contributions from authors other than the repository owner.
+Effective 2026-07-29, the repository maintainer selected the GNU General
+Public License version 3 for this project. The repository is distributed under
+the `GPL-3.0-only` SPDX expression. [`LICENSE`](LICENSE) is the unmodified
+`gpl-3.0` template returned by GitHub's license API so GitHub and package tools
+can identify it consistently.
 
-This file records a release blocker; it is not a license and is not legal
-advice.
+The maintainer also authorizes redistribution of the historical
+`ref/references.xlsx` workbook, the deterministic
+`evaluation/legacy_reference_500.jsonl` derivative, and the compact model
+derived from those rows as repository and package artifacts under
+`GPL-3.0-only`.
 
-## Decisions the maintainer must record
+## Provenance record
 
-Before publishing v2 or accepting substantive reusable contributions, the
-maintainer should obtain appropriate advice and record:
+- The workbook first appears in repository commit
+  `4a72605b0204e2ba4c21f09d74c249b066c41021`, authored by Ilya Shigabeev
+  (`beat@live.ru`).
+- Repository history for the workbook and v2 model contains only the
+  maintainer identities `Ilya Shigabeev` and `frappuccino`, using the same
+  `beat@live.ru` email address.
+- The source-verifiable 500-row derivative is committed as
+  `evaluation/legacy_reference_500.jsonl`.
+- `training/train_compact_tagger.py` deterministically regenerates the bundled
+  `src/address_normalizer/data/model.json`.
+- `training/model_evaluation.json` records the source dataset digest, split,
+  training algorithm, tuning, test results, and artifact size.
+- CI regenerates the model and requires a byte-for-byte match with the bundled
+  artifact.
 
-1. whether v2 code will have its own license or the whole repository will share
-   one;
-2. which paths and artifacts are covered;
-3. whether the original publication permission permits the intended use and
-   distribution of historical files;
-4. whether consent is needed from historical contributors;
-5. whether `ref/references.xlsx`, the derived legacy evaluation rows, and the
-   bundled compact model may be retained and redistributed;
-6. attribution, notice, or source-offer obligations for every redistributed
-   data-derived artifact;
-7. the effective date and approved license text.
+This record covers artifacts distributed by this repository and package. Large
+external Deepparse, RedMadRobot, and Moscow source corpora are not included in
+the wheel or source distribution; their separate source and license records are
+documented in `evaluation/DATA_SOURCES.md`.
 
-Possible permissive licenses and repository-scope strategies have different
-patent, attribution, and compatibility consequences. This repository does not
-recommend or select among them; that choice belongs to the maintainer after the
-ownership and provenance facts are confirmed.
+## Contributions
 
-## Until the decision is complete
-
-- Do not publish the v2 package to PyPI.
-- Do not describe the repository as open source.
-- Do not add a license classifier or license expression to package metadata.
-- Do not add a repository-wide license file as a workaround.
-- Do not accept substantive reusable code or data contributions.
-- Welcome issue reports, minimal reproductions, provenance information, review
-  comments, and non-substantive documentation corrections.
-
-Once a decision is recorded, update the repository license file, package
-metadata, README, contribution policy, release checklist, and source/data
-notices together so they cannot disagree.
+Contributions are accepted under the repository's `GPL-3.0-only` license.
+Contributors must have the right to submit their code, data, and generated
+artifacts and must record data/model provenance as described in
+[`CONTRIBUTING.md`](CONTRIBUTING.md).

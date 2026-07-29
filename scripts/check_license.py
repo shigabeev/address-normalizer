@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Make the unresolved license state an explicit release gate."""
+"""Enforce the recorded license and model-provenance release state."""
 
 from __future__ import annotations
 

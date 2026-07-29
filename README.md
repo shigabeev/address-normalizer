@@ -2,16 +2,16 @@
 
 **Turn an unstructured Russian address into typed, offset-preserving fields—locally, with no runtime dependencies or registry download.**
 
+[Русская версия](https://github.com/shigabeev/address-normalizer/blob/master/README.ru.md)
+
 `address-normalizer` v2 is a small parser for applications that already have,
 or plan to choose, their own FIAS/GAR lookup. It extracts components; it does
 not verify an address, return a FIAS ID, geocode, or silently download data.
 
 ## 30-second quick start
 
-The v2 alpha is not published to PyPI yet. Install it from a checkout:
-
 ```bash
-python -m pip install .
+python -m pip install address-normalizer
 address-normalizer "Ополченская 5-30"
 ```
 
@@ -365,8 +365,8 @@ dependencies and downloads. They never become runtime dependencies.
 - Detection deliberately misses unmarked address-like text without an
   `адрес:` cue and marked streets without a building. Its committed 30-message
   fixture is a behavior regression set, not a production accuracy benchmark.
-- The current package version is an alpha, and its license/provenance decision
-  is still a release blocker.
+- The current package version is an alpha; public API and model behavior may
+  still change before the beta.
 
 ## Migrating from v1
 
@@ -456,15 +456,12 @@ python -m build
 Read
 [`CONTRIBUTING.md`](https://github.com/shigabeev/address-normalizer/blob/master/CONTRIBUTING.md)
 before proposing a change. Bug reports, minimal parsing failures, provenance
-information, and documentation corrections are useful now. Substantive reusable
-code contributions must wait until the maintainer settles the v2 licensing
-scope.
+information, documentation corrections, and focused pull requests are welcome.
 
-## License status
+## License
 
-No license has been selected for v2, and no repository-wide license currently
-applies. Historical publication permission and contributions do not by
-themselves authorize relicensing. Read
-[`LICENSING.md`](https://github.com/shigabeev/address-normalizer/blob/master/LICENSING.md);
-selecting a license and confirming model/reference-data provenance are explicit
-maintainer decisions before a public package release.
+GNU General Public License v3.0 only (`GPL-3.0-only`). See
+[`LICENSE`](https://github.com/shigabeev/address-normalizer/blob/master/LICENSE)
+and the
+[`LICENSING.md`](https://github.com/shigabeev/address-normalizer/blob/master/LICENSING.md)
+provenance record.

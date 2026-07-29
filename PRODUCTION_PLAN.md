@@ -1,12 +1,12 @@
 # Production plan for address-normalizer v2
 
-Status: P0/P1 hardening implemented for `2.0.0a1` on
-`codex/v2-parser-sprint`; public release remains blocked.
+Status: P0/P1 hardening implemented for `2.0.0a2` on
+`codex/v2-parser-sprint`; GPL-3.0-only licensing and model provenance are
+recorded, and the alpha release is in progress.
 
 This document records the current evidence and the gates for a releasable v2.
-It does not declare the package production-ready. In particular, no release may
-be published until the licensing and model-provenance decisions below are
-resolved by the maintainer.
+It does not declare the package production-ready. Publication still requires a
+tagged, reproducible build and protected TestPyPI/PyPI release checks.
 
 ## Current-state audit
 
@@ -17,7 +17,7 @@ extracts an unverified interpretation with original character offsets. It is
 not a FIAS/GAR resolver, geocoder, spelling authority, address validator,
 service, or database.
 
-- Version: `2.0.0a1`.
+- Version: `2.0.0a2`.
 - Supported Python declared in package metadata: 3.10 through 3.14.
 - Runtime dependencies: none.
 - Public entry points: `parse()`, `parse_many()`, lazy `parse_iter()`,
@@ -26,7 +26,7 @@ service, or database.
   schemas.
 - CLI: one-address JSON and stdin JSONL modes.
 - Runtime model: 37,130-byte JSON linear-chain tagger.
-- Baseline wheel reported before this sprint: approximately 23 KB.
+- `2.0.0a2` candidate wheel: 45,843 bytes.
 - Large corpora are ignored under `.cache/external/`; none is package data.
 - Historical v1 root files are retained but are outside the `src/` package.
 
@@ -38,25 +38,25 @@ post-processing. Results retain raw substrings, `[start, end)` offsets,
 unparsed spans, warnings, alternatives, and bounded confidence values.
 Confidence is decision strength, not a calibrated probability.
 
-Known audit items to close:
+Closed API audit items:
 
-- `parse()` validates that its input is `str`; `parse_many()` must provide the
-  same predictable error contract for every element and for a non-iterable.
-- Empty input, Unicode whitespace, `ё/е`, long input, malformed input, one-shot
-  iterables, and concurrent calls need explicit tests and documentation.
-- Serialization exists as `as_dict()`; this sprint makes its JSON-compatible
-  schema and stability commitment explicit with public `TypedDict` types.
+- `parse()`, `parse_many()`, and `parse_iter()` now have a consistent,
+  explicitly tested input-error contract.
+- Empty input, Unicode whitespace, `ё/е`, long and malformed input, one-shot
+  iterables, and concurrent calls have explicit tests and documentation.
+- `as_dict()` has a documented JSON-compatible schema with public `TypedDict`
+  types.
 - Batch parsing remains eagerly list-based. The additive `parse_iter()` helper
   provides one-pass lazy iteration and documents consumption and error timing.
-- The supported source values, warning codes, alternative reasons, and review
-  policy need a concise public contract.
+- Supported source values, warning codes, alternative reasons, and the review
+  policy are part of the public alpha contract.
 
 ### Reliability evidence
 
 The four evidence domains remain separate because their sources, schemas, and
 metrics answer different questions:
 
-| Domain | Size | Primary metric | `2.0.0a1` baseline |
+| Domain | Size | Primary metric | `2.0.0a2` baseline |
 | --- | ---: | --- | ---: |
 | Historical bank-shaped reference | 500 rows | exact component micro F1 | 95.9% |
 | RedMadRobot noisy address windows | 578 windows | same-label span-overlap F1 | 58.7% |
@@ -89,13 +89,12 @@ external test results.
 - CI now tests every declared Python minor from 3.10 through 3.14, checks
   deterministic model regeneration, runs the legacy gate, and builds
   distributions.
-- Missing or incomplete gates: type checking, metadata validation, exact wheel
-  allowlist/forbidden-content inspection, clean wheel installation, CLI smoke
-  tests from the wheel, explicit wheel/model budgets, sdist review, and a
-  protected Trusted Publishing release workflow.
-- Existing contributor, security, CODEOWNERS, and PR-template files establish
-  useful beginnings, but issue forms, support/triage policy, bounded starter
-  work, release notes/checklist, examples, and launch drafts are incomplete.
+- Release gates cover strict typing, metadata validation, exact wheel
+  allowlisting/forbidden-content inspection, clean wheel installation, CLI
+  smoke tests, explicit wheel/model budgets, sdist review, and a Trusted
+  Publishing workflow with named GitHub environments.
+- Contributor, security, CODEOWNERS, PR, issue, support, triage, starter-work,
+  release, examples, and launch-draft assets are present.
 - The worktree initially contained unrelated untracked notebook artifacts:
   `Untitled.ipynb` and `.ipynb_checkpoints/`. They are not part of this sprint
   and must remain untouched and uncommitted.
@@ -154,18 +153,13 @@ For the v2 pre-release series:
   writes. A process-local immutable model may be cached and shared across
   threads.
 
-## Release blockers
+## Release decisions
 
-### Decisions that block any public package release
-
-1. Select and document a license for v2, or obtain authority for a
-   repository-wide license. Do not silently infer a license from publication.
-2. Confirm the right to redistribute the compact model derived from the
-   historical workbook.
-3. Confirm whether the historical reference workbook may remain distributed
-   and used for evaluation.
-4. Confirm redistribution/attribution requirements before publishing derived
-   artifacts from Moscow or future external training data.
+The maintainer selected GPL-3.0-only and authorized redistribution of the
+historical workbook, its 500-row derivative, and the compact model. The complete
+decision and reproducible provenance chain are recorded in `LICENSING.md`.
+External Moscow, Deepparse, and RedMadRobot source corpora remain outside the
+distribution under their separately recorded terms.
 
 ### Engineering blockers for a stable `2.0.0`
 
@@ -175,8 +169,7 @@ For the v2 pre-release series:
 - Improve or explicitly accept the weak administrative and exact-street
   behavior; do not hide it behind aggregate metrics.
 - Freeze and document the v2 serialization, warning, and compatibility policy.
-- Perform a TestPyPI rehearsal through the protected release environment after
-  the license/model decisions are recorded.
+- Perform a TestPyPI rehearsal through the protected release environment.
 
 ## Prioritized work
 
@@ -193,8 +186,8 @@ For the v2 pre-release series:
   environment, and smoke-tests import plus both CLI modes without network.
 - Add an explicit type-checker configuration and gate the public package.
 - Add a GitHub Actions release workflow using OIDC Trusted Publishing,
-  immutable artifacts, a protected environment, and an explicit version-tag
-  check. The workflow must never run during this sprint.
+  immutable artifacts, protected environments, and an explicit version-tag
+  check.
 - Add a changelog and release checklist that put licensing/provenance before
   publication.
 - Rewrite the README around the two-minute path, honest boundaries, named
@@ -246,7 +239,7 @@ Acceptance criteria:
 - Contributor templates require a linked/reproduced problem, fail-before and
   pass-after evidence, cross-domain consideration, and human understanding.
 
-### P2 — after beta evidence and maintainer decisions
+### P2 — after beta evidence
 
 - Curate training/validation data for street and administrative fields, with
   explicit rights and a new untouched final test.
@@ -273,41 +266,36 @@ Recorded engineering decisions:
 
 Maintainer decisions still required:
 
-1. Apache-2.0 for v2 only, MIT for v2 only, or a fully authorized
-   repository-wide license?
-2. Is redistribution of the current compact model and historical workbook
-   authorized?
-3. Should historical v1 remain in the default branch for v2 stable, move to a
+1. Should historical v1 remain in the default branch for v2 stable, move to a
    named archival directory/branch, or be removed only in a future major
    cleanup?
-4. Which GitHub environment will protect TestPyPI/PyPI publication, and who may
+2. Which GitHub environment will protect TestPyPI/PyPI publication, and who may
    approve it?
-5. What administrative/street quality threshold is acceptable for beta, and
+3. What administrative/street quality threshold is acceptable for beta, and
    who will perform the independent row review?
-6. Should the eventual stable support policy include every Python minor
+4. Should the eventual stable support policy include every Python minor
    3.10–3.14, or follow a rolling set once 3.10 reaches end of upstream support?
 
 ## Proposed release sequence
 
-1. Complete and review P0 without publishing.
-2. Resolve the license, historical-data, and derived-model rights in writing.
-3. Release `2.0.0a2` to TestPyPI from an approved tag; verify hashes,
+1. Complete and review P0.
+2. Release `2.0.0a2` to TestPyPI from an approved tag; verify hashes,
    attestations, wheel contents, offline install, CLI, and rollback procedure.
-4. Release `2.0.0a2` to PyPI only with explicit maintainer approval.
-5. Expand human-reviewed validation coverage and close chosen quality targets;
+3. Release `2.0.0a2` to PyPI only with explicit maintainer approval.
+4. Expand human-reviewed validation coverage and close chosen quality targets;
    publish `2.0.0b1`.
-6. Freeze API/serialization and documentation, run the sealed final evaluation
+5. Freeze API/serialization and documentation, run the sealed final evaluation
    once, and publish `2.0.0rc1`.
-7. Promote the reviewed release-candidate code and evidence to `2.0.0`; rebuild
+6. Promote the reviewed release-candidate code and evidence to `2.0.0`; rebuild
    only for a new version if any input changes.
 
 ## Evidence record for this sprint
 
-Recorded on 2026-07-28:
+Recorded on 2026-07-28 and rerun for the 2026-07-29 release candidate:
 
-- Unit suite: 59 tests passed independently on locally available Python 3.10,
-  3.13, and 3.14 interpreters. CI covers 3.10 through 3.14.
-- Strict `mypy==1.17.1`: success on all eight public package modules.
+- Unit suite: 74 tests passed; fresh installed-wheel smoke tests passed on
+  Python 3.10 and 3.14. CI covers 3.10 through 3.14.
+- Strict `mypy==1.17.1`: success on all nine public package modules.
 - Compact tagger: deterministic regeneration was byte-identical; the model is
   37,130 bytes with SHA-256
   `c23c4f3cf308b1f36f56d0679df278d66b3aeae41c70a2144d88606199f3eb36`.
@@ -318,20 +306,19 @@ Recorded on 2026-07-28:
   84.3948%, character-overlap F1 66.2289%, and token-label F1 66.4946%;
   Moscow exact component-value micro F1 85.3620% and exact-address match
   64.9316%.
-- Two consecutive builds were byte-identical. The wheel is 27,539 bytes
+- Two consecutive final builds were byte-identical. The wheel is 45,843 bytes
   (SHA-256
-  `f3692a15134ee3d1dc32167f5a4f6ae1ed75306357118227ec519861e47feff8`);
-  the sdist is 47,438 bytes (SHA-256
-  `1982226834a673c6bf6843ab11632241916ae43eda7f901e0688581959dd97b0`).
-- Compared with the matched reproducible pre-sprint artifacts, the wheel moved
-  from 23,806 to 27,539 bytes (+3,733; +15.7%), the sdist moved from 133,166
-  to 47,438 bytes (-85,728; -64.4%), and the model remained 37,130 bytes.
+  `e98a49d0d7e8514485230bdccab043e6dedf0991c177a1c183fd561f734b1650`);
+  the sdist is 73,601 bytes (SHA-256
+  `e439ab16e0af50424d36c519c6fc309bafb3167af35ad3fb3b21f4f5b892bb1c`).
+- The model remained 37,130 bytes, the wheel stayed below its 256 KiB budget,
+  and the larger source archive includes both English and Russian
+  documentation.
 - Wheel metadata, archive safety, exact runtime allowlist, hashes, artifact
   policy rejection tests, Twine rendering, no-index/no-dependency installation,
   import, one-address CLI, and JSONL CLI checks all passed.
-- Publication remains deliberately blocked by `release-policy.toml` and the
-  unreachable release publish job until license and model-provenance decisions
-  are recorded.
+- GPL-3.0-only licensing and model provenance were subsequently approved on
+  2026-07-29; `release-policy.toml` now enforces the publishable state.
 
 Committed benchmark baselines must not be rewritten merely to make a change
 look successful. Timing-only fields may vary when the reports are reproduced.
