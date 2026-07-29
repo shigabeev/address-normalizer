@@ -1,51 +1,23 @@
 name: Feature request
-description: Propose a user problem that fits the small offline parser boundary
-title: "[Feature] "
-labels:
-  - enhancement
-  - needs-triage
+description: Propose a focused addition to the parser
+title: "feature: "
+labels: ["needs-triage"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Start with the user problem. The core package will remain offline,
-        dependency-free at runtime, and separate from FIAS/GAR resolution.
   - type: textarea
     id: problem
     attributes:
-      label: User problem
-      description: Who needs this, in what workflow, and what fails today?
+      label: Problem
+      description: Describe the user need, not an implementation.
     validations:
       required: true
   - type: textarea
-    id: outcome
+    id: example
     attributes:
-      label: Smallest useful outcome
-      description: Describe observable behavior without prescribing an implementation.
+      label: Minimal example and desired result
     validations:
       required: true
   - type: textarea
-    id: alternatives
+    id: tradeoffs
     attributes:
-      label: Alternatives considered
-      description: Could application code, a resolver, or an integration example solve this outside the core package?
-    validations:
-      required: true
-  - type: textarea
-    id: compatibility
-    attributes:
-      label: API, data, and maintenance implications
-      description: Note serialized-shape changes, runtime cost, dependencies, data provenance, and who will maintain it.
-    validations:
-      required: true
-  - type: checkboxes
-    id: boundary
-    attributes:
-      label: Product boundary
-      options:
-        - label: The request does not require bundled FIAS/GAR data or address verification in the parser.
-          required: true
-        - label: The request does not require a hidden download, mandatory service, or new scientific runtime.
-          required: true
-        - label: I searched existing issues and documentation for this need.
-          required: true
+      label: Scope and trade-offs
+      description: Explain why this belongs in the offline parser rather than a FIAS/GAR resolver.

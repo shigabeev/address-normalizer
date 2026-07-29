@@ -9,6 +9,10 @@ from pathlib import Path
 import sys
 from typing import Any, Callable, Iterable
 
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
 from address_normalizer import parse
 from address_normalizer.types import ParsedAddress
 
@@ -219,22 +223,51 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--data",
         type=Path,
-        default=Path(__file__).with_name("legacy_reference_500.jsonl"),
+        default=ROOT / "benchmarks/legacy_500.jsonl",
     )
-    parser.add_argument("--gates", type=Path)
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="fail unless the release regression thresholds pass",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
 
     report = score_rows(_load_jsonl(args.data))
-    if args.gates:
-        gates = json.loads(args.gates.read_text(encoding="utf-8"))
+    if args.check:
+        gates = {
+            "minimum_rows": 500,
+            "minimum_metrics": {
+                "exact_address_rate": 0.80,
+                "no_unparsed_rate": 0.75,
+                "exact_component_value_micro.f1": 0.95,
+            },
+        }
         report["gates"] = _check_gates(report, gates)
         report["release_gate_passed"] = all(
             outcome["passed"] for outcome in report["gates"]
         )
 
     rendered = json.dumps(report, ensure_ascii=False, indent=2)
-    print(rendered)
+    if args.check:
+        print(
+            json.dumps(
+                {
+                    "rows": report["rows"],
+                    "exact_address_rate": report["exact_address_rate"],
+                    "no_unparsed_rate": report["no_unparsed_rate"],
+                    "exact_component_value_micro": report[
+                        "exact_component_value_micro"
+                    ],
+                    "gates": report["gates"],
+                    "release_gate_passed": report["release_gate_passed"],
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+    else:
+        print(rendered)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(f"{rendered}\n", encoding="utf-8")
