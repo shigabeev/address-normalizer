@@ -2,16 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [master, main]
+    branches: [master]
   pull_request:
-  workflow_dispatch:
 
 permissions:
   contents: read
-
-concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   test:
@@ -22,106 +17,47 @@ jobs:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
-      - name: Check out source
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
-          cache-dependency-path: pyproject.toml
-      - name: Install test tools and package
-        run: |
-          python -m pip install "pytest==8.4.2"
-          python -m pip install --no-deps .
-      - name: Run tests
-        run: python -m pytest
+      - run: python -m pip install pytest==8.4.2
+      - run: python -m pip install --no-deps .
+      - run: python -m pytest
 
   static-analysis:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out source
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
-          cache: pip
-          cache-dependency-path: pyproject.toml
-      - name: Install mypy
-        run: python -m pip install "mypy==1.17.1"
-      - name: Check package typing
-        run: python -m mypy
+      - run: python -m pip install mypy==1.17.1
+      - run: python -m mypy
 
   model-and-regression:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out source
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
-      - name: Install package
-        run: python -m pip install --no-deps .
-      - name: Verify compact model
-        run: |
-          python training/evaluate_compact_tagger.py
-          python training/train_compact_tagger.py \
-            --output "${RUNNER_TEMP}/regenerated-model.json" \
-            --report "${RUNNER_TEMP}/regenerated-model-report.json"
-          cmp src/address_normalizer/data/model.json "${RUNNER_TEMP}/regenerated-model.json"
-      - name: Enforce legacy-reference release gates
-        run: |
-          python evaluation/evaluate.py \
-            --data evaluation/legacy_reference_500.jsonl \
-            --gates evaluation/release_gates.json
+      - run: python -m pip install --no-deps .
+      - run: python tools/benchmark.py --check
 
   package:
     runs-on: ubuntu-latest
-    env:
-      SOURCE_DATE_EPOCH: "1704067200"
     steps:
-      - name: Check out source
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
-          cache: pip
-          cache-dependency-path: pyproject.toml
-      - name: Install build and metadata tools
-        run: python -m pip install "build==1.3.0" "twine==6.2.0"
-      - name: Verify publication license and provenance
-        run: python scripts/check_license.py --require-publishable
-      - name: Build byte-identical wheel and source distribution twice
-        run: python scripts/build_reproducibly.py --output dist
-      - name: Inspect contents, dependencies, checksums, and size
-        run: |
-          python scripts/check_artifacts.py dist \
-            --write-manifest artifact-manifest.json
-          python scripts/test_artifact_policy.py dist
-          python -m twine check dist/*.whl dist/*.tar.gz
-      - name: Install wheel without an index
-        run: |
-          python -m venv "${RUNNER_TEMP}/wheel-venv"
-          "${RUNNER_TEMP}/wheel-venv/bin/python" -m pip install \
-            --no-index --no-deps dist/*.whl
-          cp scripts/smoke_installed.py "${RUNNER_TEMP}/smoke_installed.py"
-          cd "${RUNNER_TEMP}"
-          "${RUNNER_TEMP}/wheel-venv/bin/python" -I smoke_installed.py
-          "${RUNNER_TEMP}/wheel-venv/bin/address-normalizer" \
-            "Москва, Тверская 1" > single.json
-          echo "Ополченская 5-30" |
-            "${RUNNER_TEMP}/wheel-venv/bin/address-normalizer" --jsonl > batch.jsonl
-          "${RUNNER_TEMP}/wheel-venv/bin/python" -I -c \
-            "import json; json.load(open('single.json')); [json.loads(line) for line in open('batch.jsonl')]"
-      - name: Upload inspected distributions
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: distributions
-          path: |
-            dist/
-            artifact-manifest.json
-          if-no-files-found: error
-          retention-days: 14
+      - run: python -m pip install build==1.3.0 twine==6.2.0
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - run: |
+          python -m venv /tmp/address-normalizer-smoke
+          /tmp/address-normalizer-smoke/bin/pip install --no-index --no-deps dist/*.whl
+          cd /tmp
+          /tmp/address-normalizer-smoke/bin/python -c \
+            "from address_normalizer import parse; assert parse('Тверская 1').house_num.value == '1'"

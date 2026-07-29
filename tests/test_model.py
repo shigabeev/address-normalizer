@@ -9,7 +9,7 @@ sys.path.insert(0, str(ROOT))
 from address_normalizer import parse
 from address_normalizer.tagger import CompactSequenceTagger
 from address_normalizer.tokenizer import tokenize
-from training.real_corpus import (
+from tools.model_data import (
     build_examples,
     corpus_summary,
     load_reference_rows,
@@ -38,13 +38,13 @@ def test_bundled_model_was_trained_on_grouped_real_examples():
     )
     training = payload["training"]
     assert training["algorithm"] == "epoch-averaged structured perceptron"
-    assert training["dataset"] == "evaluation/legacy_reference_500.jsonl"
+    assert training["dataset"] == "benchmarks/legacy_500.jsonl"
     assert training["examples"] >= 300
 
 
 def test_real_corpus_has_disjoint_nonempty_splits():
     examples = build_examples(
-        load_reference_rows(ROOT / "evaluation/legacy_reference_500.jsonl")
+        load_reference_rows(ROOT / "benchmarks/legacy_500.jsonl")
     )
     summary = corpus_summary(examples)
     assert summary["leaking_groups"] == []

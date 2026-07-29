@@ -23,8 +23,8 @@ from address_normalizer.tagger import (
     START,
     token_features,
 )
-from evaluation.evaluate import score_rows
-from training.real_corpus import (
+from benchmark import score_rows
+from model_data import (
     SequenceExample,
     build_examples,
     corpus_summary,
@@ -222,7 +222,7 @@ def _model_payload(
                 "source-verifiable legacy reference rows with deterministic "
                 "marker-free views"
             ),
-            "dataset": "evaluation/legacy_reference_500.jsonl",
+            "dataset": "benchmarks/legacy_500.jsonl",
             "dataset_sha256": dataset_sha256,
             "split": "SHA-256 by canonical address group: 70/15/15",
         },
@@ -344,8 +344,7 @@ def train(
 
     report = {
         "scope": (
-            "group-disjoint real-address model evaluation; source and "
-            "derived-model provenance are recorded in LICENSING.md"
+            "group-disjoint real-address model evaluation"
         ),
         "dataset": dataset_name,
         "dataset_sha256": dataset_sha256,
@@ -380,7 +379,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--data",
         type=Path,
-        default=ROOT / "evaluation/legacy_reference_500.jsonl",
+        default=ROOT / "benchmarks/legacy_500.jsonl",
     )
     parser.add_argument(
         "--output",
@@ -390,12 +389,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--report",
         type=Path,
-        default=ROOT / "training/model_evaluation.json",
     )
     parser.add_argument(
         "--baseline-model",
         type=Path,
-        default=ROOT / "training/baselines/synthetic_model.json",
+        default=ROOT / "tools/synthetic_model.json",
     )
     parser.add_argument("--seed", type=int, default=2017)
     parser.add_argument("--epoch-grid", default="5,10,20,40,80")
@@ -419,17 +417,18 @@ def main(argv: list[str] | None = None) -> int:
         json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
         encoding="utf-8",
     )
-    args.report.parent.mkdir(parents=True, exist_ok=True)
-    args.report.write_text(
-        f"{json.dumps(report, ensure_ascii=False, indent=2)}\n",
-        encoding="utf-8",
-    )
+    if args.report:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(
+            f"{json.dumps(report, ensure_ascii=False, indent=2)}\n",
+            encoding="utf-8",
+        )
     print(
         json.dumps(
             {
                 "output": str(args.output),
                 "bytes": args.output.stat().st_size,
-                "report": str(args.report),
+                "report": str(args.report) if args.report else None,
                 "selected_epochs": report["selected_epochs"],
                 "test_sequence": {
                     name: {

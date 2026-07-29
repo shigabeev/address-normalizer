@@ -1,4 +1,0 @@
-elasticsearch
-pandas
-simpledbf
-tqdm

@@ -1,69 +1,39 @@
 name: Bug report
-description: Report a reproducible API, CLI, installation, or packaging defect
-title: "[Bug] "
-labels:
-  - bug
-  - needs-triage
+description: Report incorrect parsing, spans, detection, CLI, or packaging
+title: "bug: "
+labels: ["needs-triage"]
 body:
   - type: markdown
     attributes:
-      value: |
-        Thanks for a report maintainers can reproduce. For incorrect extracted
-        fields, use the Parsing failure form instead. Never include secrets,
-        private addresses, or unredacted production data.
+      value: Use a synthetic or redacted address. Never post private customer data.
   - type: input
     id: version
     attributes:
-      label: Package version or commit
-      description: Output of `python -c "import address_normalizer; print(address_normalizer.__version__)"` and, for a checkout, the commit SHA.
-      placeholder: 2.0.0a2 / abc1234
-    validations:
-      required: true
-  - type: input
-    id: python
-    attributes:
-      label: Python and operating system
-      placeholder: Python 3.12.4 on Ubuntu 24.04
+      label: Version
+      placeholder: 2.0.0a2
     validations:
       required: true
   - type: textarea
-    id: install
+    id: input
     attributes:
-      label: Installation and exact command
-      description: Include the install source and the smallest command that triggers the defect.
-      render: shell
+      label: Minimal input
+      render: text
     validations:
       required: true
   - type: textarea
     id: actual
     attributes:
-      label: Actual behavior
-      description: Include the complete exception and traceback where applicable.
+      label: Actual result
+      render: json
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: Expected behavior
-      description: Explain the observable result you expected and why.
+      label: Expected result and why
     validations:
       required: true
   - type: textarea
-    id: reproduction
+    id: context
     attributes:
-      label: Minimal reproduction
-      description: Prefer a self-contained snippet with synthetic data.
-      render: python
-    validations:
-      required: true
-  - type: checkboxes
-    id: checks
-    attributes:
-      label: Submission checks
-      options:
-        - label: I reproduced this on the version or commit named above.
-          required: true
-        - label: I removed secrets and personal or production address data.
-          required: true
-        - label: This is not a security vulnerability requiring private disclosure.
-          required: true
+      label: Environment or additional context
