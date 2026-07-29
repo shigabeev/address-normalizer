@@ -1,6 +1,6 @@
 # Security
 
-Version `2.0.0a2` is the currently supported alpha.
+Version `2.0.0` is currently supported.
 
 Please report vulnerabilities through
 [GitHub private vulnerability reporting](https://github.com/shigabeev/address-normalizer/security/advisories/new).
