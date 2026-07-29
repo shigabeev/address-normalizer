@@ -46,6 +46,16 @@ class ParsedAddressDict(TypedDict):
     alternatives: list[AlternativeDict]
 
 
+class DetectedAddressDict(TypedDict):
+    """JSON-compatible serialization of :class:`DetectedAddress`."""
+
+    text: str
+    span: list[int]
+    confidence: float
+    signals: list[str]
+    parsed: ParsedAddressDict
+
+
 @dataclass(frozen=True, slots=True)
 class AddressPart:
     """One component extracted from a half-open span of the original string.
@@ -184,4 +194,39 @@ class ParsedAddress:
             "alternatives": [
                 alternative.as_dict() for alternative in self.alternatives
             ],
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class DetectedAddress:
+    """One address-like span detected inside a larger message.
+
+    ``start`` and ``end`` are half-open offsets into the original message.
+    Component offsets in ``parsed`` are relative to ``text``. ``confidence`` is
+    detection decision strength, not a calibrated probability or proof that
+    the address exists.
+    """
+
+    text: str
+    start: int
+    end: int
+    confidence: float
+    signals: tuple[str, ...]
+    parsed: ParsedAddress
+
+    @property
+    def span(self) -> tuple[int, int]:
+        """Return the half-open span in the original message."""
+
+        return self.start, self.end
+
+    def as_dict(self) -> DetectedAddressDict:
+        """Return the stable JSON-compatible representation."""
+
+        return {
+            "text": self.text,
+            "span": [self.start, self.end],
+            "confidence": round(self.confidence, 4),
+            "signals": list(self.signals),
+            "parsed": self.parsed.as_dict(),
         }

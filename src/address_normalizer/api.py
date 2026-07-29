@@ -5,13 +5,19 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Iterable, Iterator
 
+from .detection import AddressDetector
 from .parser import AddressParser
-from .types import ParsedAddress
+from .types import DetectedAddress, ParsedAddress
 
 
 @lru_cache(maxsize=1)
 def _default_parser() -> AddressParser:
     return AddressParser()
+
+
+@lru_cache(maxsize=1)
+def _default_detector() -> AddressDetector:
+    return AddressDetector(_default_parser())
 
 
 def _require_address(value: object, *, name: str) -> str:
@@ -64,3 +70,15 @@ def parse_many(addresses: Iterable[str]) -> list[ParsedAddress]:
     """
 
     return list(parse_iter(addresses))
+
+
+def detect_addresses(text: str) -> tuple[DetectedAddress, ...]:
+    """Detect address-like spans inside one free-form message.
+
+    Detection is deliberately conservative: a candidate normally needs a
+    street marker and building number, or an explicit ``адрес:`` cue plus a
+    parseable street and building. Returned spans index the original message.
+    No registry lookup or existence verification is performed.
+    """
+
+    return _default_detector().detect(_require_address(text, name="text"))

@@ -14,9 +14,13 @@ and compact-model provenance blockers in `LICENSING.md`.
 - Typed, dependency-free v2 parsing API and JSON/JSONL command-line interface.
 - Lazy `parse_iter()` batches, predictable batch input errors, and public
   typed-dictionary serialization schemas.
+- Conservative `detect_addresses()` message-span detection with typed,
+  offset-preserving results and a positive/negative behavior fixture.
 - Compact bundled sequence model for residual unmarked text.
 - Independent evaluation reports with explicit metric-family names and release
   regression gates; legacy report keys remain compatibility aliases.
+- A complete 500-row diagnostic CSV with per-field outcomes, scenario columns,
+  triage hypotheses, and a representative failure summary.
 - Distribution inspection, isolated-wheel smoke tests, size limits, and
   artifact checksum manifests.
 

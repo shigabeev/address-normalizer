@@ -1,0 +1,2758 @@
+{
+  "rows": 2841,
+  "positive_rows": 135,
+  "negative_rows": 2706,
+  "scope": "complete reconstructed benchmark messages; gold address windows must contain both STREET and HOUSE labels",
+  "limitations": [
+    "The source is a PII NER benchmark, not a detector-specific Russian message sample.",
+    "Gold spans follow BIO annotation boundaries while predicted spans intentionally include parseable markers and units.",
+    "Rows without a STREET+HOUSE cluster are treated as detection negatives even when they contain isolated location entities."
+  ],
+  "metric_definitions": {
+    "span_overlap_micro": "one-to-one precision, recall, and F1 for any character overlap between a detected span and a STREET+HOUSE gold window",
+    "exact_span_micro": "one-to-one precision, recall, and F1 requiring identical half-open boundaries",
+    "exact_message_rate": "fraction of complete messages whose ordered span lists match",
+    "negative_message_specificity": "fraction of messages without a STREET+HOUSE gold window where the detector returns no span"
+  },
+  "span_overlap_micro": {
+    "tp": 98,
+    "fp": 2,
+    "fn": 46,
+    "precision": 0.98,
+    "recall": 0.680556,
+    "f1": 0.803279
+  },
+  "exact_span_micro": {
+    "tp": 29,
+    "fp": 71,
+    "fn": 115,
+    "precision": 0.29,
+    "recall": 0.201389,
+    "f1": 0.237705
+  },
+  "exact_message_rate": 0.962337,
+  "negative_message_specificity": 1.0,
+  "failure_case_count": 107,
+  "failure_rows_by_reason": {
+    "missed_address": 44,
+    "span_drops_gold_text": 33,
+    "span_includes_context": 33,
+    "spurious_address": 1
+  },
+  "failure_cases": [
+    {
+      "source_row": 0,
+      "text": "ООО « Ремонт и Обслуживание » УЛ . РОКОССОВСКОГО , дом 10 , офис 15 , ВОЛЬСК , 191023 , Танзания ТЕЛ . : +7 ( 812 ) 987 6543 , WWW . REMONT-I-OBSLUZHIVANIE . RU",
+      "gold": [
+        {
+          "start": 30,
+          "end": 96,
+          "text": "УЛ . РОКОССОВСКОГО , дом 10 , офис 15 , ВОЛЬСК , 191023 , Танзания"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 30,
+          "end": 67,
+          "text": "УЛ . РОКОССОВСКОГО , дом 10 , офис 15",
+          "confidence": 0.77,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 54,
+      "text": "ул . Крымский Вал , 10 , Бузулук , 119049 Форма заявки: на https://help . bitbucket . org/terms .",
+      "gold": [
+        {
+          "start": 0,
+          "end": 32,
+          "text": "ул . Крымский Вал , 10 , Бузулук"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 0,
+          "end": 22,
+          "text": "ул . Крымский Вал , 10",
+          "confidence": 0.44,
+          "signals": [
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 74,
+      "text": "Адрес: Leonard Назаровна терехов , пер . Маршала Жукова , д . 181 .",
+      "gold": [
+        {
+          "start": 35,
+          "end": 65,
+          "text": "пер . Маршала Жукова , д . 181"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 7,
+          "end": 65,
+          "text": "Leonard Назаровна терехов , пер . Маршала Жукова , д . 181",
+          "confidence": 0.85,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 118,
+      "text": "ООО \" Спортивный мир \" 630005 , Регион 63 , Невинномысск , улица Кирова , дом 25 , квартира 10 ИНН 6312345678 Место расчётов: sportivnyimir . ru",
+      "gold": [
+        {
+          "start": 44,
+          "end": 94,
+          "text": "Невинномысск , улица Кирова , дом 25 , квартира 10"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 59,
+          "end": 94,
+          "text": "улица Кирова , дом 25 , квартира 10",
+          "confidence": 0.77,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 151,
+      "text": "Клиника: адрес пр . бауманская , д . 71 . Запись по email: timur . morozov@protonmail . com .",
+      "gold": [
+        {
+          "start": 15,
+          "end": 39,
+          "text": "пр . бауманская , д . 71"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 218,
+      "text": "Адрес: 2 этаж , центр ТОРГОВЫЙ КВАРТАЛ 3-а , Каширское ш . , Вольск , Глазов , АМУРСКАЯ ОБЛ . , 142000",
+      "gold": [
+        {
+          "start": 39,
+          "end": 91,
+          "text": "3-а , Каширское ш . , Вольск , Глазов , АМУРСКАЯ ОБЛ"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 223,
+      "text": "Заявитель: Пестов Reginald Демьяновна , адрес: г . Чапаевск , ш . Ярцевская , д . 32 , email: beth09@example . org .",
+      "gold": [
+        {
+          "start": 51,
+          "end": 84,
+          "text": "Чапаевск , ш . Ярцевская , д . 32"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 47,
+          "end": 84,
+          "text": "г . Чапаевск , ш . Ярцевская , д . 32",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 232,
+      "text": "В соответствии с запросом котировки № 54321 , ООО « Луч » предоставляет следующие сведения : ИНН 7707083893 , адрес : г . Златоуст , ул . Примерная , д . 1 . Просим учесть наши предложения при рассмотрении заявки .",
+      "gold": [
+        {
+          "start": 122,
+          "end": 155,
+          "text": "Златоуст , ул . Примерная , д . 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 118,
+          "end": 155,
+          "text": "г . Златоуст , ул . Примерная , д . 1",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 246,
+      "text": "MOY ADRES PROPISKI: АБХАЗИЯ , almatinskaya OBLAST G . TALDYKORGAN ul . abaya D . 10 KV . 4",
+      "gold": [
+        {
+          "start": 20,
+          "end": 90,
+          "text": "АБХАЗИЯ , almatinskaya OBLAST G . TALDYKORGAN ul . abaya D . 10 KV . 4"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 262,
+      "text": "MOY ADRES PROPISKI: ROSSIYA , тАмБовсКАя OBLAST G . MYTISHCHI Стромынка D . 5 KV . 12",
+      "gold": [
+        {
+          "start": 20,
+          "end": 85,
+          "text": "ROSSIYA , тАмБовсКАя OBLAST G . MYTISHCHI Стромынка D . 5 KV . 12"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 274,
+      "text": "УВЕДОМЛЕНИЕ об одностороннем отказе от исполнения договора возмездного оказания услуг от 04 . 03 . 2026 и окончательном расчёте Кому : Жолобовой Маргарите Петровне e - mail : golobovaantonina @ gmail . com От : Общества с ограниченной ответственностью « Юридическая группа ТАРАН » адрес : 655917 , Республика Хакасия , г . Абакан , пр . Ленина , д . 29А , пом . 8Н ИНН 1902029948 , ОГРН 1201900001885 Дата : 28 апреля 2026 г . Уважаемая Алина Ивановна ! Между Вами ( Исполнитель ) и ООО « Юридическая группа ТАРЗАН » ( Заказчик ) заключён договор возмездного оказания услуг от 04 марта 2026 г . ( далее — Договор ) . С 22 апреля 2021 г . Вы в одностор . . . . . . соответствует ранее направленному Акту от 21 апреля 2026 г . , составленному в связи с фактическим прекращением оказания услуг . Сумма налога на доходы физических лиц , подлежащая удержанию , — 4 334 руб . Таким образом , к перечислению на Ваш расчётный счёт причитается 28 999 ( Двадцать восемь тысяч девятьсот девяносто девять ) рублей 00 копеек . Указанная сумма будет перечислена в течение 10 ( десяти ) банковских дней с даты получения Вами настоящего уведомления . Иные выплаты , включая полное фиксированное вознаграждение за апрель , компенсации и неустойки , Заказчиком не производятся , поскольку услуги в полном объёме и надлежащим образом не оказывались , а Договор правомерно прекращён . Направление дополнительных актов или претензий со стороны Исполнителя не повлияет на изложенную позицию : Договор расторгнут Заказчиком в одностороннем порядке в соответствии с императивной нормой ст . 782 ГК РФ , и надлежащее прекращение обязательств не требует подписания двустороннего соглашения . В случае возникновения судебного спора Заказчик оставляет за собой право предъявить требования о взыскании убытков , вызванных некачественным оказанием услуг ( в том числе упущенной выгоды вследствие потери клиентов из - за пропущенных обращений ) , а также о возмещении всех судебных издержек . Проверить на безопасность по законодательству для заказчика",
+      "gold": [
+        {
+          "start": 298,
+          "end": 353,
+          "text": "Республика Хакасия , г . Абакан , пр . Ленина , д . 29А"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 293,
+      "text": "kservice Кузовной сервис №1 в Невинномысск г . УСОЛЬЕ-СИБИРСКОЕ , УЛ . ДУБИНИНСКАЯ , 70 стр . 1 ( ~ 14000 без стоимости бампера и без дополнительных работ )",
+      "gold": [
+        {
+          "start": 30,
+          "end": 95,
+          "text": "Невинномысск г . УСОЛЬЕ-СИБИРСКОЕ , УЛ . ДУБИНИНСКАЯ , 70 стр . 1"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 350,
+      "text": "+79772711425 , адрес: пр . Хавская , д . 149 , кв . 230 .",
+      "gold": [
+        {
+          "start": 22,
+          "end": 55,
+          "text": "пр . Хавская , д . 149 , кв . 230"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 407,
+      "text": "Получатель: Greenwood Percy Зиновьевна , адрес: пр . Школьная , дом 101 , кв . 266 .",
+      "gold": [
+        {
+          "start": 48,
+          "end": 82,
+          "text": "пр . Школьная , дом 101 , кв . 266"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 424,
+      "text": "Japan cars сервис - ТО и ремонт автомобилей 924 797 21 83 Авдотья - Старокоптевский пер . , 6 ( м . Войковская )",
+      "gold": [
+        {
+          "start": 68,
+          "end": 93,
+          "text": "Старокоптевский пер . , 6"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 0,
+          "end": 93,
+          "text": "Japan cars сервис - ТО и ремонт автомобилей 924 797 21 83 Авдотья - Старокоптевский пер . , 6",
+          "confidence": 0.44,
+          "signals": [
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 467,
+      "text": "Ping to 26 . 204 . 205 . 243 successful . Facebook , Inc . 1 Hacker Way , MENLO PARK , УЛЬЯНОВСКАЯ 94025 БАНГЛАДЕШ",
+      "gold": [
+        {
+          "start": 59,
+          "end": 114,
+          "text": "1 Hacker Way , MENLO PARK , УЛЬЯНОВСКАЯ 94025 БАНГЛАДЕШ"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 500,
+      "text": "братан 181 . 61 . 145 . 201:5432 это наш прод . Штрих-код 4607038490125 , доставить в Уфу , пер . Заводской , стр . 2",
+      "gold": [
+        {
+          "start": 86,
+          "end": 117,
+          "text": "Уфу , пер . Заводской , стр . 2"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 533,
+      "text": "Проверили данные по контрагенту ООО \" Ромашка \" . Юридический адрес : 123456 , г . Невинномысск , ул . Ленина , д . 1 . ИНН : 7707083893 , КПП : 770101001 . Необходимо запросить у них свежую выписку из ЕГРЮЛ .",
+      "gold": [
+        {
+          "start": 83,
+          "end": 117,
+          "text": "Невинномысск , ул . Ленина , д . 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 70,
+          "end": 117,
+          "text": "123456 , г . Невинномысск , ул . Ленина , д . 1",
+          "confidence": 0.99,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "postal_code",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 556,
+      "text": "г Алатырь , наб Новоданиловская , 10 , 3 . 318",
+      "gold": [
+        {
+          "start": 2,
+          "end": 46,
+          "text": "Алатырь , наб Новоданиловская , 10 , 3 . 318"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 0,
+          "end": 36,
+          "text": "г Алатырь , наб Новоданиловская , 10",
+          "confidence": 0.5,
+          "signals": [
+            "street_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text",
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 607,
+      "text": "ООО \" Яндекс . Маркет \" 119021 , Бузулук , УЛИЦА ЛЬВА ТОЛСТОГО , дом 16 , строение 2 ИНН 7705396987 Место расчётов: market . yandex . ru",
+      "gold": [
+        {
+          "start": 33,
+          "end": 84,
+          "text": "Бузулук , УЛИЦА ЛЬВА ТОЛСТОГО , дом 16 , строение 2"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 43,
+          "end": 84,
+          "text": "УЛИЦА ЛЬВА ТОЛСТОГО , дом 16 , строение 2",
+          "confidence": 0.77,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 693,
+      "text": "Претензия направляется в адрес ООО \" Строительная Компания \" ИНН 7707083893 . Мы требуем немедленно устранить недоделки , выявленные при приемке объекта по адресу : г . Чапаевск , ул . Строителей , д . 1 . В противном случае мы будем вынуждены обратиться в суд .",
+      "gold": [
+        {
+          "start": 169,
+          "end": 203,
+          "text": "Чапаевск , ул . Строителей , д . 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 165,
+          "end": 203,
+          "text": "г . Чапаевск , ул . Строителей , д . 1",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 724,
+      "text": "Автосервис « Лихач » Невинномысск , 2-Й ЛИХАЧЁВСКИЙ ПЕРЕУЛОК , 10с1 ( - )",
+      "gold": [
+        {
+          "start": 21,
+          "end": 67,
+          "text": "Невинномысск , 2-Й ЛИХАЧЁВСКИЙ ПЕРЕУЛОК , 10с1"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 764,
+      "text": "MOY ADRES PROPISKI: ROSSIYA , LENINGRADSKAYA OBLAST G . SAINT-PETERSBURG UL . NEVSKYI PROSPEKT D . 20 KV . 7",
+      "gold": [
+        {
+          "start": 20,
+          "end": 108,
+          "text": "ROSSIYA , LENINGRADSKAYA OBLAST G . SAINT-PETERSBURG UL . NEVSKYI PROSPEKT D . 20 KV . 7"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 774,
+      "text": "NOVOSIBIRSK , gagARiNA 7",
+      "gold": [
+        {
+          "start": 0,
+          "end": 24,
+          "text": "NOVOSIBIRSK , gagARiNA 7"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 843,
+      "text": "Адрес: офис на просп . Комсомольская , д . 15 . Сайт: https://app . mchs . gov . ru .",
+      "gold": [
+        {
+          "start": 15,
+          "end": 45,
+          "text": "просп . Комсомольская , д . 15"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 7,
+          "end": 45,
+          "text": "офис на просп . Комсомольская , д . 15",
+          "confidence": 0.85,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 871,
+      "text": "MOY ADRES PROPISKI: МАЛЬТА , ALMATINSKAYA OBLAST G . almaty UL . DOSTYK D . 15 KV . 20",
+      "gold": [
+        {
+          "start": 20,
+          "end": 86,
+          "text": "МАЛЬТА , ALMATINSKAYA OBLAST G . almaty UL . DOSTYK D . 15 KV . 20"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 872,
+      "text": "ООО \" Рога и копыта \" 115487 , Регион 77 , Чапаевск , Дмитровское шоссе , дом 10 , строение 2 ИНН 7701234567 Место расчётов: rogaikopyta . ru",
+      "gold": [
+        {
+          "start": 43,
+          "end": 93,
+          "text": "Чапаевск , Дмитровское шоссе , дом 10 , строение 2"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 54,
+          "end": 93,
+          "text": "Дмитровское шоссе , дом 10 , строение 2",
+          "confidence": 0.77,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 887,
+      "text": "По адресу УЛ . МАЯКОВСКОГО , д . 7 , г . Минск , Ботсвана",
+      "gold": [
+        {
+          "start": 10,
+          "end": 57,
+          "text": "УЛ . МАЯКОВСКОГО , д . 7 , г . Минск , Ботсвана"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 10,
+          "end": 34,
+          "text": "УЛ . МАЯКОВСКОГО , д . 7",
+          "confidence": 0.85,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 951,
+      "text": "Офис в Южном федеральном округе , Краснодар , бульвар Платановый 7",
+      "gold": [
+        {
+          "start": 7,
+          "end": 66,
+          "text": "Южном федеральном округе , Краснодар , бульвар Платановый 7"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 46,
+          "end": 66,
+          "text": "бульвар Платановый 7",
+          "confidence": 0.44,
+          "signals": [
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 953,
+      "text": "Уведомление о прибытии : ФИО : Устинов А . В . Регион : MYTISHCHI . Адрес : ул . Ленина , д . 1 . Паспортные данные : 4500 123456 . ИНН : 500100732259 .",
+      "gold": [
+        {
+          "start": 56,
+          "end": 95,
+          "text": "MYTISHCHI . Адрес : ул . Ленина , д . 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 76,
+          "end": 95,
+          "text": "ул . Ленина , д . 1",
+          "confidence": 0.85,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 963,
+      "text": "Склад: Свердловская область , Берёзовский , Транспортная 8А",
+      "gold": [
+        {
+          "start": 7,
+          "end": 59,
+          "text": "Свердловская область , Берёзовский , Транспортная 8А"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1012,
+      "text": "12 Crag South Avenue , Downtown Westside . He laughs , saying both are true . His phone number printed above the bar",
+      "gold": [
+        {
+          "start": 0,
+          "end": 40,
+          "text": "12 Crag South Avenue , Downtown Westside"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1040,
+      "text": "Панама , Димитровград , 117312 , УЛ . ВАВИЛОВА , д . 19",
+      "gold": [
+        {
+          "start": 0,
+          "end": 55,
+          "text": "Панама , Димитровград , 117312 , УЛ . ВАВИЛОВА , д . 19"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 24,
+          "end": 55,
+          "text": "117312 , УЛ . ВАВИЛОВА , д . 19",
+          "confidence": 0.75,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "postal_code",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 1070,
+      "text": "Уважаемые господа , направляем вам наше коммерческое предложение на поставку комплектующих . Подробные условия и спецификацию вы найдете в приложении . Для заключения договора просим использовать следующие реквизиты : ООО « Строитель » , ИНН 7707083893 , КПП 770101001 , ОГРН 1027739123456 , адрес : 105064 , г . Невинномысск , ул . Земляной Вал , д . 26 , стр . 2 . Ожидаем вашего ответа .",
+      "gold": [
+        {
+          "start": 313,
+          "end": 364,
+          "text": "Невинномысск , ул . Земляной Вал , д . 26 , стр . 2"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 300,
+          "end": 364,
+          "text": "105064 , г . Невинномысск , ул . Земляной Вал , д . 26 , стр . 2",
+          "confidence": 0.99,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "postal_code",
+            "location_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1074,
+      "text": "Поставщик : ООО « Ромашка » , ИНН 7707083893 , юридический адрес : г . Чапаевск , ул . Ленина , д . 1 . Получатель : ООО « Василек » , ИНН 0987654321 , адрес : г . Димитровград , пр . Просвещения , д . 10 . Договор № 55 от 15 . 03 . 2024 .",
+      "gold": [
+        {
+          "start": 71,
+          "end": 101,
+          "text": "Чапаевск , ул . Ленина , д . 1"
+        },
+        {
+          "start": 164,
+          "end": 204,
+          "text": "Димитровград , пр . Просвещения , д . 10"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 67,
+          "end": 101,
+          "text": "г . Чапаевск , ул . Ленина , д . 1",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "missed_address",
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1101,
+      "text": "| Поставщик | Адрес | Email | | ООО Вектор | Тверь , ш . Московское , д . 2 , оф . 310 | timur@dev . global . com |",
+      "gold": [
+        {
+          "start": 45,
+          "end": 86,
+          "text": "Тверь , ш . Московское , д . 2 , оф . 310"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 20,
+          "end": 86,
+          "text": "| Email | | ООО Вектор | Тверь , ш . Московское , д . 2 , оф . 310",
+          "confidence": 0.9,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1114,
+      "text": "Адрес: г . Невинномысск , ш . Люблинская , дом 177 . Email: natalya_vinogradov@rambler . ru .",
+      "gold": [
+        {
+          "start": 11,
+          "end": 50,
+          "text": "Невинномысск , ш . Люблинская , дом 177"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 7,
+          "end": 50,
+          "text": "г . Невинномысск , ш . Люблинская , дом 177",
+          "confidence": 0.96,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1148,
+      "text": "Адрес: г . Чапаевск , просп . Рокоссовского , д . 151 . Сайт: https://spotify . com/terms .",
+      "gold": [
+        {
+          "start": 11,
+          "end": 53,
+          "text": "Чапаевск , просп . Рокоссовского , д . 151"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 7,
+          "end": 53,
+          "text": "г . Чапаевск , просп . Рокоссовского , д . 151",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1161,
+      "text": "ВОЛЬСК , ПРОФСОЮЗНАЯ 15",
+      "gold": [
+        {
+          "start": 0,
+          "end": 23,
+          "text": "ВОЛЬСК , ПРОФСОЮЗНАЯ 15"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1164,
+      "text": "Настоящим удостоверяю , что Лукин Питер Платонович , проживающий по адресу : г . Нижнем Новгород , ул . Ленина , д . 5 , кв . 10 , паспорт серии 4508 № 123456 , выдан ОВД \" Замоскворечье \" г . Crestville 10 . 05 . 2008 , ИНН 500100732259 , является надлежащим образом уполномоченным представителем по всем вопросам , связанным с управлением недвижимым имуществом , расположенным по адресу : г . Каменск-Уральский , ул . Садовая , д . 1 , к . 2 .",
+      "gold": [
+        {
+          "start": 81,
+          "end": 128,
+          "text": "Нижнем Новгород , ул . Ленина , д . 5 , кв . 10"
+        },
+        {
+          "start": 395,
+          "end": 443,
+          "text": "Каменск-Уральский , ул . Садовая , д . 1 , к . 2"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 77,
+          "end": 128,
+          "text": "г . Нижнем Новгород , ул . Ленина , д . 5 , кв . 10",
+          "confidence": 0.96,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        },
+        {
+          "start": 391,
+          "end": 443,
+          "text": "г . Каменск-Уральский , ул . Садовая , д . 1 , к . 2",
+          "confidence": 0.96,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1196,
+      "text": "Счет № 123 от 15 . 03 . 2023 . Поставщик : ООО \" СтройПрогресс \" , ИНН 7707083893 , КПП 772301001 . Адрес : г . Бузулук , ул . Лесная , д . 5 . Получатель : ЗАО \" Альфа \" , ИНН 7734567890 , КПП 773401001 . Адрес : г . Невинномысск , ул . Тверская , д . 10 . Сумма к оплате : 50 000 руб . Назначение платежа : Оплата по договору № 45 от 01 . 03 . 2023 .",
+      "gold": [
+        {
+          "start": 112,
+          "end": 141,
+          "text": "Бузулук , ул . Лесная , д . 5"
+        },
+        {
+          "start": 218,
+          "end": 255,
+          "text": "Невинномысск , ул . Тверская , д . 10"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 108,
+          "end": 141,
+          "text": "г . Бузулук , ул . Лесная , д . 5",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        },
+        {
+          "start": 214,
+          "end": 255,
+          "text": "г . Невинномысск , ул . Тверская , д . 10",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1206,
+      "text": "Договор № 123 / 2023 от 15 . 03 . 2023 . Поставщик : ООО « Ромашка » , ИНН 7707083893 , адрес : г . Kronshtadt , ул . Лесная , д . 5 . Покупатель : ИП Филат И . И . , ИНН 5001122334 , адрес : г . Обнински , ул . Мира , д . 10 . Настоящий договор составлен в двух экземплярах , имеющих одинаковую юридическую силу .",
+      "gold": [
+        {
+          "start": 100,
+          "end": 132,
+          "text": "Kronshtadt , ул . Лесная , д . 5"
+        },
+        {
+          "start": 196,
+          "end": 225,
+          "text": "Обнински , ул . Мира , д . 10"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 96,
+          "end": 132,
+          "text": "г . Kronshtadt , ул . Лесная , д . 5",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        },
+        {
+          "start": 192,
+          "end": 225,
+          "text": "г . Обнински , ул . Мира , д . 10",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1209,
+      "text": "Vernon живЕТ на улице ЛЕНинГрадской , в городе Ейск , в квартире № 12",
+      "gold": [
+        {
+          "start": 16,
+          "end": 69,
+          "text": "улице ЛЕНинГрадской , в городе Ейск , в квартире № 12"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1216,
+      "text": "Нижний Новгород , пр . Хавская , 88 — 8-831-422-50-60",
+      "gold": [
+        {
+          "start": 0,
+          "end": 35,
+          "text": "Нижний Новгород , пр . Хавская , 88"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1219,
+      "text": "Автосервис Автопилот на метро Войковская Димитровград , Старопетровский проезд , 9А Округ САО , Нижегородский Войковский ( - )",
+      "gold": [
+        {
+          "start": 41,
+          "end": 120,
+          "text": "Димитровград , Старопетровский проезд , 9А Округ САО , Нижегородский Войковский"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 56,
+          "end": 83,
+          "text": "Старопетровский проезд , 9А",
+          "confidence": 0.44,
+          "signals": [
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 1295,
+      "text": "Адрес доставки: Новошахтинск ул . Нижегородская 9 , кв . 11",
+      "gold": [
+        {
+          "start": 16,
+          "end": 59,
+          "text": "Новошахтинск ул . Нижегородская 9 , кв . 11"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 29,
+          "end": 59,
+          "text": "ул . Нижегородская 9 , кв . 11",
+          "confidence": 0.67,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 1310,
+      "text": "пр . Нижегородская , 12А , +44-8133-836688 Онлайн-запись на https://new . cian . ru/catalog . Cluster node: 172 . 22 . 197 . 235 .",
+      "gold": [
+        {
+          "start": 0,
+          "end": 24,
+          "text": "пр . Нижегородская , 12А"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1339,
+      "text": "ООО \" Русские технологии \" 127051 , Регион 77 , ГлАзОВ , улица петровка , дом 38 , строение 1 ИНН 7706543210 Место расчётов: russian-technologies . ru",
+      "gold": [
+        {
+          "start": 48,
+          "end": 93,
+          "text": "ГлАзОВ , улица петровка , дом 38 , строение 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 57,
+          "end": 93,
+          "text": "улица петровка , дом 38 , строение 1",
+          "confidence": 0.77,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 1346,
+      "text": "MOY ADRES PROPISKI: ЭСТОНИЯ , AKMOLINSKAYA OBLAST G . ASTANA UL . DOSTYK D . 5 KV . 1",
+      "gold": [
+        {
+          "start": 20,
+          "end": 85,
+          "text": "ЭСТОНИЯ , AKMOLINSKAYA OBLAST G . ASTANA UL . DOSTYK D . 5 KV . 1"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1364,
+      "text": "Приёмная , пр . Генерала Карбышева , д . 7 , кв . 88 . 8 812 682 53 49 .",
+      "gold": [
+        {
+          "start": 11,
+          "end": 52,
+          "text": "пр . Генерала Карбышева , д . 7 , кв . 88"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1420,
+      "text": "напиши подробный план равизтия учебного центра английского языка - помещение 2 класса , хол , первый этаж , парковка Бритландия Трофимова 7 А",
+      "gold": [
+        {
+          "start": 128,
+          "end": 141,
+          "text": "Трофимова 7 А"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1450,
+      "text": "MOY ADRES PROPISKI: МАДАГАСКАР , KIEVSKAYA OBLAST G . IRPIN UL . KIEVSKAYA D . 20 KV . 2",
+      "gold": [
+        {
+          "start": 20,
+          "end": 88,
+          "text": "МАДАГАСКАР , KIEVSKAYA OBLAST G . IRPIN UL . KIEVSKAYA D . 20 KV . 2"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1489,
+      "text": "ООО \" Mail . ru Group \" 125167 , Алатырь , Ленинградский проспект , дом 39 , строение 79 ИНН 7719488300 Место расчётов: mail . ru",
+      "gold": [
+        {
+          "start": 33,
+          "end": 88,
+          "text": "Алатырь , Ленинградский проспект , дом 39 , строение 79"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 43,
+          "end": 88,
+          "text": "Ленинградский проспект , дом 39 , строение 79",
+          "confidence": 0.77,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 1504,
+      "text": "Адрес доставки: бузулук ул . Краснопролетарская 34 , кв . 78",
+      "gold": [
+        {
+          "start": 16,
+          "end": 60,
+          "text": "бузулук ул . Краснопролетарская 34 , кв . 78"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 24,
+          "end": 60,
+          "text": "ул . Краснопролетарская 34 , кв . 78",
+          "confidence": 0.67,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 1578,
+      "text": "Для формирования счета на оплату , пожалуйста , предоставьте полный перечень реквизитов вашей организации . Идентификационный номер налогоплательщика : 7707083893 . Адрес доставки : г . Краснодар , Невский пр . , д . 10 .",
+      "gold": [
+        {
+          "start": 186,
+          "end": 219,
+          "text": "Краснодар , Невский пр . , д . 10"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 182,
+          "end": 219,
+          "text": "г . Краснодар , Невский пр . , д . 10",
+          "confidence": 0.63,
+          "signals": [
+            "address_cue",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1596,
+      "text": "Склад: Промышленная ул . , стр . 7 , +7 926 301-44-58",
+      "gold": [
+        {
+          "start": 7,
+          "end": 34,
+          "text": "Промышленная ул . , стр . 7"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1602,
+      "text": "SAMARA , LENINA 25",
+      "gold": [
+        {
+          "start": 0,
+          "end": 18,
+          "text": "SAMARA , LENINA 25"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1614,
+      "text": "Apple Inc . 1 Infinite Loop , cupertino , ОРЛОВСКАЯ 95014 БОТСВАНА",
+      "gold": [
+        {
+          "start": 12,
+          "end": 66,
+          "text": "1 Infinite Loop , cupertino , ОРЛОВСКАЯ 95014 БОТСВАНА"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1628,
+      "text": "АО « СБЕРБАНК катар » УЛ . БОЛЬШАЯ ДМИТРОВКА , 32 , СТР . 1 , УСОЛЬЕ-СИБИРСКОЕ , 107031 , ГРЕНАДА ТЕЛ . : +1-244-518-3825 , WWW . SBERBANK . RU",
+      "gold": [
+        {
+          "start": 14,
+          "end": 97,
+          "text": "катар » УЛ . БОЛЬШАЯ ДМИТРОВКА , 32 , СТР . 1 , УСОЛЬЕ-СИБИРСКОЕ , 107031 , ГРЕНАДА"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1636,
+      "text": "Как добраться до пр . Толстого , д . 176 в Люберцы ?",
+      "gold": [
+        {
+          "start": 17,
+          "end": 50,
+          "text": "пр . Толстого , д . 176 в Люберцы"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1668,
+      "text": "recipient_fio = Калашникова Инна recipient_addr = Вологда , ул . Герцена , дом 11 recipient_email = i . kalashnikova@vologda . ru",
+      "gold": [
+        {
+          "start": 50,
+          "end": 81,
+          "text": "Вологда , ул . Герцена , дом 11"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 60,
+          "end": 81,
+          "text": "ул . Герцена , дом 11",
+          "confidence": 0.72,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 1693,
+      "text": "Ближайшее отделение: бул . Академика Королёва , д . 78 , кв . 7 . Почта: maksim@bedrijf . nl .",
+      "gold": [
+        {
+          "start": 21,
+          "end": 63,
+          "text": "бул . Академика Королёва , д . 78 , кв . 7"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1739,
+      "text": "MOY ADRES PROPISKI: ROSSIYA , КИРОВСКАЯ OBLAST G . MOSKVA UL . ARBAT D . 15 KV . 50",
+      "gold": [
+        {
+          "start": 20,
+          "end": 83,
+          "text": "ROSSIYA , КИРОВСКАЯ OBLAST G . MOSKVA UL . ARBAT D . 15 KV . 50"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1777,
+      "text": "Счет № 123 от 15 . 03 . 2024 Поставщик : ООО \" Вектор \" , ИНН 7707083893 , Юридический адрес : 190000 , г . ASTANA , ул . Невская , д . 5 . Покупатель : ЗАО \" Горизонт \" , ИНН : 4321098765 . Адрес : 125009 , г . Пермь , ул . Тверская , д . 10 .",
+      "gold": [
+        {
+          "start": 108,
+          "end": 137,
+          "text": "ASTANA , ул . Невская , д . 5"
+        },
+        {
+          "start": 212,
+          "end": 242,
+          "text": "Пермь , ул . Тверская , д . 10"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 95,
+          "end": 137,
+          "text": "190000 , г . ASTANA , ул . Невская , д . 5",
+          "confidence": 0.99,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "postal_code",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        },
+        {
+          "start": 199,
+          "end": 242,
+          "text": "125009 , г . Пермь , ул . Тверская , д . 10",
+          "confidence": 0.99,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "postal_code",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1883,
+      "text": "Завещание . Я , Торопин Ермолай Германович , residing at : ромнах , Tverskaya St . 20 , apt . 5 , my INN is 500100732259 , do hereby declare my last will and testament .",
+      "gold": [
+        {
+          "start": 59,
+          "end": 95,
+          "text": "ромнах , Tverskaya St . 20 , apt . 5"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 1947,
+      "text": "Глазов , 117997 , ул . Вавилова , д . 19",
+      "gold": [
+        {
+          "start": 0,
+          "end": 40,
+          "text": "Глазов , 117997 , ул . Вавилова , д . 19"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 9,
+          "end": 40,
+          "text": "117997 , ул . Вавилова , д . 19",
+          "confidence": 0.75,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "postal_code",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 1951,
+      "text": "Здравствуйте , хочу заказать товары из вашего интернет-магазина . Доставка в город аЛАТЫРЬ , улица Советская , дом 8 , квартира 74 .",
+      "gold": [
+        {
+          "start": 83,
+          "end": 130,
+          "text": "аЛАТЫРЬ , улица Советская , дом 8 , квартира 74"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 66,
+          "end": 130,
+          "text": "Доставка в город аЛАТЫРЬ , улица Советская , дом 8 , квартира 74",
+          "confidence": 0.78,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 1978,
+      "text": "MOY ADRES PROPISKI: АБХАЗИЯ , GRODNENSKAYA OBLAST G . GRODNO Цветной бульвар D . 5 KV . 12",
+      "gold": [
+        {
+          "start": 20,
+          "end": 90,
+          "text": "АБХАЗИЯ , GRODNENSKAYA OBLAST G . GRODNO Цветной бульвар D . 5 KV . 12"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 69,
+          "end": 82,
+          "text": "бульвар D . 5",
+          "confidence": 0.44,
+          "signals": [
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 1982,
+      "text": "Переехали на Комсомольский проспект , дом 34 кв . 118",
+      "gold": [
+        {
+          "start": 13,
+          "end": 53,
+          "text": "Комсомольский проспект , дом 34 кв . 118"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 0,
+          "end": 53,
+          "text": "Переехали на Комсомольский проспект , дом 34 кв . 118",
+          "confidence": 0.72,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2069,
+      "text": "Автосервис КАПИТАН-АВТО на метро Коптево Вольск , КРОНШТАДТСКИЙ БУЛЬВАР , 35б Округ САО , Люблино Головинский ( доехать , узнать ) ( ? ? ? )",
+      "gold": [
+        {
+          "start": 27,
+          "end": 109,
+          "text": "метро Коптево Вольск , КРОНШТАДТСКИЙ БУЛЬВАР , 35б Округ САО , Люблино Головинский"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 50,
+          "end": 77,
+          "text": "КРОНШТАДТСКИЙ БУЛЬВАР , 35б",
+          "confidence": 0.44,
+          "signals": [
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2074,
+      "text": "Никитский бул . , 12",
+      "gold": [
+        {
+          "start": 0,
+          "end": 20,
+          "text": "Никитский бул . , 12"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2078,
+      "text": "живу г . Северодвинск ул . блока д . 65 не далеко от центра",
+      "gold": [
+        {
+          "start": 9,
+          "end": 39,
+          "text": "Северодвинск ул . блока д . 65"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 22,
+          "end": 39,
+          "text": "ул . блока д . 65",
+          "confidence": 0.67,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2104,
+      "text": "Магазин на ПР . ТИМИРЯЗЕВСКАЯ , дом 110 , кв . 219 , заказы на s . komarov@bmstu . ru .",
+      "gold": [
+        {
+          "start": 11,
+          "end": 50,
+          "text": "ПР . ТИМИРЯЗЕВСКАЯ , дом 110 , кв . 219"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2108,
+      "text": "Лев — Северодвинск ул . Толстого , дом 96",
+      "gold": [
+        {
+          "start": 6,
+          "end": 41,
+          "text": "Северодвинск ул . Толстого , дом 96"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 19,
+          "end": 41,
+          "text": "ул . Толстого , дом 96",
+          "confidence": 0.72,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2113,
+      "text": "<shipping> <country> Сербия </country> <region> Ленинградская обл . </region> <district> Всеволожский район </district> <street> наб . Фонтанки </street> <house> д . 30 </house> </shipping>",
+      "gold": [
+        {
+          "start": 21,
+          "end": 168,
+          "text": "Сербия </country> <region> Ленинградская обл . </region> <district> Всеволожский район </district> <street> наб . Фонтанки </street> <house> д . 30"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 129,
+          "end": 168,
+          "text": "наб . Фонтанки </street> <house> д . 30",
+          "confidence": 0.67,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2115,
+      "text": "КОМПАНИЯ ООО « RUTUBE » АДРЕС ГОРОД НОВОШАХТИНСК УЛИЦА ДАНИЛОВСКАЯ ДОМ 10 КОРПУС 1",
+      "gold": [
+        {
+          "start": 36,
+          "end": 82,
+          "text": "НОВОШАХТИНСК УЛИЦА ДАНИЛОВСКАЯ ДОМ 10 КОРПУС 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 30,
+          "end": 82,
+          "text": "ГОРОД НОВОШАХТИНСК УЛИЦА ДАНИЛОВСКАЯ ДОМ 10 КОРПУС 1",
+          "confidence": 0.99,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2142,
+      "text": "Адрес офиса: пр . Обручева , д . 1 . Email: tarasov . ivan@rambler . ru .",
+      "gold": [
+        {
+          "start": 13,
+          "end": 34,
+          "text": "пр . Обручева , д . 1"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2185,
+      "text": "Библиотека в выхинО-ЖуЛЕБИНО районе , пр . Электрозаводская , д . 58 , кв . 198 , email vitali1975@rambler . ru .",
+      "gold": [
+        {
+          "start": 13,
+          "end": 79,
+          "text": "выхинО-ЖуЛЕБИНО районе , пр . Электрозаводская , д . 58 , кв . 198"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2216,
+      "text": "Адрес доставки: Ейск ул . Вавилова 56 , кв . 3",
+      "gold": [
+        {
+          "start": 16,
+          "end": 46,
+          "text": "Ейск ул . Вавилова 56 , кв . 3"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 21,
+          "end": 46,
+          "text": "ул . Вавилова 56 , кв . 3",
+          "confidence": 0.67,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2229,
+      "text": "К проекту присоединился и кронштадт . У Морского собора по адресу Якорная площадь , дом 1 , оборудовали специальный павильон , в котором показывали карты островов Финского залива . Но на одном из стендов адрес значился : “ Якроная пл . 1 , Kronshtadt City” , и организаторы уверяли , что такие ошибки демонстрируют живую природу города .",
+      "gold": [
+        {
+          "start": 66,
+          "end": 89,
+          "text": "Якорная площадь , дом 1"
+        },
+        {
+          "start": 223,
+          "end": 250,
+          "text": "Якроная пл . 1 , Kronshtadt"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 66,
+          "end": 89,
+          "text": "Якорная площадь , дом 1",
+          "confidence": 0.9,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        },
+        {
+          "start": 210,
+          "end": 237,
+          "text": "значился : “ Якроная пл . 1",
+          "confidence": 0.62,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text",
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2255,
+      "text": "Производственная компания « Альфа » приглашает к сотрудничеству дилеров . Мы предлагаем выгодные условия партнерства и поддержку на всех этапах . Подробности по телефону или по электронной почте . Адрес для корреспонденции : MOSKVA , ул . Центральная , д . 1 . Наш инн 7707083893 .",
+      "gold": [
+        {
+          "start": 225,
+          "end": 258,
+          "text": "MOSKVA , ул . Центральная , д . 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 203,
+          "end": 258,
+          "text": "для корреспонденции : MOSKVA , ул . Центральная , д . 1",
+          "confidence": 0.85,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2269,
+      "text": "Поставщик : ООО \" Лучшее Решение \" , ИНН : 7707083893 , юридический адрес : г . Бузулук , ул . Примерная , д . 1 . Предлагаем к поставке партию строительных материалов согласно приложенной спецификации . Готовы предоставить все необходимые документы .",
+      "gold": [
+        {
+          "start": 80,
+          "end": 112,
+          "text": "Бузулук , ул . Примерная , д . 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 76,
+          "end": 112,
+          "text": "г . Бузулук , ул . Примерная , д . 1",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2285,
+      "text": "Поставщик : ООО « Альфа » ( ИНН 7707083893 ) , юридический адрес : 105082 , г . Каменск-Уральский , ул . Бакунинская , д . 5 . Договор № 123 / 2023 от 15 . 03 . 2023 .",
+      "gold": [
+        {
+          "start": 80,
+          "end": 124,
+          "text": "Каменск-Уральский , ул . Бакунинская , д . 5"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 67,
+          "end": 124,
+          "text": "105082 , г . Каменск-Уральский , ул . Бакунинская , д . 5",
+          "confidence": 0.99,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "postal_code",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2316,
+      "text": "Самовывоз: Димитровград , ул . Малышева , д . 51 , +7 ( 343 ) 200-10-20",
+      "gold": [
+        {
+          "start": 11,
+          "end": 48,
+          "text": "Димитровград , ул . Малышева , д . 51"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 26,
+          "end": 48,
+          "text": "ул . Малышева , д . 51",
+          "confidence": 0.67,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2329,
+      "text": "Адрес доставки: АЛАТЫРЬ ул . Светланская 15 , офис 207",
+      "gold": [
+        {
+          "start": 16,
+          "end": 54,
+          "text": "АЛАТЫРЬ ул . Светланская 15 , офис 207"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 24,
+          "end": 54,
+          "text": "ул . Светланская 15 , офис 207",
+          "confidence": 0.67,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2332,
+      "text": "Отделение в посёлке Малаховка , Быковское шоссе д . 9",
+      "gold": [
+        {
+          "start": 20,
+          "end": 53,
+          "text": "Малаховка , Быковское шоссе д . 9"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 32,
+          "end": 53,
+          "text": "Быковское шоссе д . 9",
+          "confidence": 0.67,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2336,
+      "text": "+7 985 469-24-69 , Зеленодольск , московское шоссе , д . 15 Прайс-лист на https://admin . arxiv . org/products . Connected via 192 . 168 . 248 . 29 .",
+      "gold": [
+        {
+          "start": 19,
+          "end": 59,
+          "text": "Зеленодольск , московское шоссе , д . 15"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 34,
+          "end": 59,
+          "text": "московское шоссе , д . 15",
+          "confidence": 0.67,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2351,
+      "text": "MOY ADRES PROPISKI: ЧЕРНОГОРИЯ , ANDIZHANSKAYA OBLAST G . ANDIZHAN ul . navroz D . 10 KV . 6",
+      "gold": [
+        {
+          "start": 20,
+          "end": 92,
+          "text": "ЧЕРНОГОРИЯ , ANDIZHANSKAYA OBLAST G . ANDIZHAN ul . navroz D . 10 KV . 6"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2370,
+      "text": "В связи с ненадлежащим исполнением условий договора № 123 от 15 . 01 . 2023 , прошу Вас в срок до 01 . 03 . 2024 направить в наш адрес письменные объяснения . Адрес для направления документов : 101000 , Рыбинск , ул . Примерная , д . 1 , офис 5 . Реквизиты контрагента : ООО \" СтройДом \" , ИНН 7707083893 , КПП 667890123 .",
+      "gold": [
+        {
+          "start": 203,
+          "end": 244,
+          "text": "Рыбинск , ул . Примерная , д . 1 , офис 5"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 165,
+          "end": 244,
+          "text": "для направления документов : 101000 , Рыбинск , ул . Примерная , д . 1 , офис 5",
+          "confidence": 0.98,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "postal_code",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2372,
+      "text": "сервак 23 . 233 . 99 . 78:22 лежит опять . Заявитель: Ingram Клим Макарович , г . Бузулук , бул . Цветной бульвар , д . 98 , кв . 120 , подробнее на https://ranepa . ru/help .",
+      "gold": [
+        {
+          "start": 82,
+          "end": 133,
+          "text": "Бузулук , бул . Цветной бульвар , д . 98 , кв . 120"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 98,
+          "end": 133,
+          "text": "Цветной бульвар , д . 98 , кв . 120",
+          "confidence": 0.72,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2380,
+      "text": "MOY ADRES PROPISKI: НЕПАЛ , CHUYSKAYA OBLAST G . BISHKEK академика королёва D . 10 KV . 15",
+      "gold": [
+        {
+          "start": 20,
+          "end": 90,
+          "text": "НЕПАЛ , CHUYSKAYA OBLAST G . BISHKEK академика королёва D . 10 KV . 15"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2382,
+      "text": "Вниманию ООО \" СтройКомПлюс \" , расположенного по адресу : г . Тверь , ул . Строителей , д . 15 , ИНН 7707083893 , сообщаем о нарушении сроков поставки строительных материалов . В соответствии с пунктом 3 . 2 Договора № 145 от 10 . 01 . 2023 , поставка должна была быть осуществлена до 01 . 03 . 2023 . На сегодняшний день материалы не поступили , что создает существенные препятствия для выполнения наших обязательств перед заказчиком .",
+      "gold": [
+        {
+          "start": 63,
+          "end": 95,
+          "text": "Тверь , ул . Строителей , д . 15"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 59,
+          "end": 112,
+          "text": "г . Тверь , ул . Строителей , д . 15 , ИНН 7707083893",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2389,
+      "text": "Зарегистрирован: г . Северодвинск , калмыкии обл . , ул . толстого , д . 103",
+      "gold": [
+        {
+          "start": 21,
+          "end": 76,
+          "text": "Северодвинск , калмыкии обл . , ул . толстого , д . 103"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 17,
+          "end": 76,
+          "text": "г . Северодвинск , калмыкии обл . , ул . толстого , д . 103",
+          "confidence": 0.73,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2407,
+      "text": "При заключении кредитного договора № 456789012345 , прошу указать следующие данные : Шувалов Платон Артёмович , ИНН 500100732259 , дата рождения 01 . 01 . 1990 . Проживает по адресу : г . Алатырь , ул . Ленина , д . 1 , кв . 1 .",
+      "gold": [
+        {
+          "start": 188,
+          "end": 226,
+          "text": "Алатырь , ул . Ленина , д . 1 , кв . 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 184,
+          "end": 226,
+          "text": "г . Алатырь , ул . Ленина , д . 1 , кв . 1",
+          "confidence": 0.96,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2411,
+      "text": "Локации включали не только улицы и проспекты , но и метки : “центр , около ТЦ Gulliver” , “рядом с метро Дворец Украина” , ул Обручева , 16 , Люблинская , 10 , ул Усачёва , 44А , УЛ БАУМАНСКАЯ , 34 , УЛ ЯРЦЕВСКАЯ , 12 . Иногда встречались устаревшие адреса , записанные как “ ул . Ленина , 5 , Киев ” или “г . ейск , центр , напротив театра” .",
+      "gold": [
+        {
+          "start": 123,
+          "end": 217,
+          "text": "ул Обручева , 16 , Люблинская , 10 , ул Усачёва , 44А , УЛ БАУМАНСКАЯ , 34 , УЛ ЯРЦЕВСКАЯ , 12"
+        },
+        {
+          "start": 276,
+          "end": 298,
+          "text": "ул . Ленина , 5 , Киев"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 160,
+          "end": 176,
+          "text": "ул Усачёва , 44А",
+          "confidence": 0.44,
+          "signals": [
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        },
+        {
+          "start": 179,
+          "end": 197,
+          "text": "УЛ БАУМАНСКАЯ , 34",
+          "confidence": 0.44,
+          "signals": [
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        },
+        {
+          "start": 200,
+          "end": 217,
+          "text": "УЛ ЯРЦЕВСКАЯ , 12",
+          "confidence": 0.44,
+          "signals": [
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        },
+        {
+          "start": 276,
+          "end": 291,
+          "text": "ул . Ленина , 5",
+          "confidence": 0.62,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text",
+        "spurious_address"
+      ]
+    },
+    {
+      "source_row": 2425,
+      "text": "Бампер передний в цвет Ford Focus 3 ВОЛЬСК , ул . Плеханова , 10Ас3",
+      "gold": [
+        {
+          "start": 36,
+          "end": 67,
+          "text": "ВОЛЬСК , ул . Плеханова , 10Ас3"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2451,
+      "text": "К заявке на участие в тендере прилагаем следующую информацию : Общество с ограниченной ответственностью \" Альфа \" , ИНН 7707083893 , юридический адрес : г . Нижнем Новгород , ул . Ленина , д . 1 . Готовы предоставить дополнительные документы по запросу .",
+      "gold": [
+        {
+          "start": 157,
+          "end": 194,
+          "text": "Нижнем Новгород , ул . Ленина , д . 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 153,
+          "end": 194,
+          "text": "г . Нижнем Новгород , ул . Ленина , д . 1",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2466,
+      "text": "Адрес доставки: Усолье-Сибирское ул . социалистическая 7 , кв . 12",
+      "gold": [
+        {
+          "start": 16,
+          "end": 66,
+          "text": "Усолье-Сибирское ул . социалистическая 7 , кв . 12"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 33,
+          "end": 66,
+          "text": "ул . социалистическая 7 , кв . 12",
+          "confidence": 0.67,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2514,
+      "text": "Бузулук , ул . Кольцовская , д . 9 , +7 ( 951 ) 270 63 31",
+      "gold": [
+        {
+          "start": 0,
+          "end": 34,
+          "text": "Бузулук , ул . Кольцовская , д . 9"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 10,
+          "end": 34,
+          "text": "ул . Кольцовская , д . 9",
+          "confidence": 0.67,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2531,
+      "text": "MOY ADRES PROPISKI: КАТАР , KIEVSKAYA OBLAST G . ГЛАЗОВ UL . KRESHCHATIK D . 10 KV . 36",
+      "gold": [
+        {
+          "start": 20,
+          "end": 87,
+          "text": "КАТАР , KIEVSKAYA OBLAST G . ГЛАЗОВ UL . KRESHCHATIK D . 10 KV . 36"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2589,
+      "text": "src= 208 . 222 . 5 . 31:53 dst= 10 . 0 . 0 . 1 . В ромнах , на улице Гетьмана Мазепи 26 , международным письмам прописывают адрес иначе : Hetman Mazepa street , Romny , ГРЕНАДА , но индекс иногда теряется .",
+      "gold": [
+        {
+          "start": 51,
+          "end": 87,
+          "text": "ромнах , на улице Гетьмана Мазепи 26"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2600,
+      "text": "8 919 431-42-62 , адрес: пр . ферганская , д . 130 , кв . 220 .",
+      "gold": [
+        {
+          "start": 25,
+          "end": 61,
+          "text": "пр . ферганская , д . 130 , кв . 220"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2648,
+      "text": "City maps change faster than memories . A couple once met every evening at “Old Lantern Café , 52A Howard St . , Crestville , ” but the address updated to 52 Howard Street , and then the café moved entirely to 18 Seaview Drive with a bright phone number +353 85 224 9087 printed on menus . The original lot now displays a grocery’s poorly translated name “Lanterno Shop Market , ” leaving locals nostalgic for the old wooden chairs and the window facing the coordinates 53 . 3498 , -6 . 2603 which used to align perfectly with the sunset . When I visited on 07/14/2022 , the new waitress said the café is still the heart of the city but the heart beats in different ribs .",
+      "gold": [
+        {
+          "start": 95,
+          "end": 123,
+          "text": "52A Howard St . , Crestville"
+        },
+        {
+          "start": 155,
+          "end": 171,
+          "text": "52 Howard Street"
+        },
+        {
+          "start": 210,
+          "end": 226,
+          "text": "18 Seaview Drive"
+        }
+      ],
+      "predicted": [],
+      "failure_reasons": [
+        "missed_address"
+      ]
+    },
+    {
+      "source_row": 2698,
+      "text": "Гражданин Тихонов Лев Савельевич , 15 . 05 . 1985 г . р . , ИНН 500100732259 , проживающий по адресу : г . Romny , ул . Ленина , д . 5 , кв . 10 . Прошу предоставить справку о состоянии лицевого счета .",
+      "gold": [
+        {
+          "start": 107,
+          "end": 144,
+          "text": "Romny , ул . Ленина , д . 5 , кв . 10"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 103,
+          "end": 144,
+          "text": "г . Romny , ул . Ленина , д . 5 , кв . 10",
+          "confidence": 0.96,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2707,
+      "text": "Автосервис : Алатырь , Ул . Дубнинская , д . 83 , стр . 5 ( 03 . 06 с 10 : 00 ) - 12000 руб работа под ключ + стоимость деталей ( ~ 15000 - 16000 руб )",
+      "gold": [
+        {
+          "start": 13,
+          "end": 57,
+          "text": "Алатырь , Ул . Дубнинская , д . 83 , стр . 5"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 23,
+          "end": 57,
+          "text": "Ул . Дубнинская , д . 83 , стр . 5",
+          "confidence": 0.72,
+          "signals": [
+            "street_marker",
+            "house_marker",
+            "unit_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_drops_gold_text"
+      ]
+    },
+    {
+      "source_row": 2764,
+      "text": "Центр оказывает посильную помощь семьям , воспитывающим несовершеннолетних детей , инвалидам , одиноким пожилым гражданам . На сайте Вы найдете информацию о реализации различных программ , работе клубов , режиме работы учреждения , деятельности структурных подразделений , оказываемых социальных услугах . Вы можете обратиться к специалистам учреждения через интернет , отправить письмо на нашу электронную почту belkids @ beladm . ru . Важная информация для семей с детьми до 1 , 5 лет Уважаемые родители ! Информируем вас о возможности получения необходимых детских вещей во временное пользование в рамках социального проек . . . . . . ели для близнецов )  Прогулочная коляска  Стул для кормления  Автолюлька для новорожденного  Автокресло для детей от 6 месяцев Кто может воспользоваться услугой :  Семьи , где родители учатся очно  Многодетные семьи  Неполные семьи и одинокие мамы  Семьи с детьми - инвалидами  Малообеспеченные семьи и семьи в трудной жизненной ситуации Условия предоставления :  Срок пользования согласовывается индивидуально  Все предметы предоставляются временно Где получить помощь :  Отделение « Семейный МФЦ » МБУ « Комплексный центр социального обслуживания населения города Белгорода »  Адрес : г . Белгород , ул . Королева , д . 9  Телефон : + 7 ( 4722 ) 55 - 15 - 75 , + 7 ( 4722 ) 52 - 58 - 13  Режим работы : пн - пт с 9 : 00 до 18 : 00 ( перерыв 13 : 00 - 14 : 00 ) Дополнительные услуги центра  Бесплатное юридическое сопровождение  Психологическая поддержка  Педагогическая помощь  Социальное консультирование  Помощь в получении мер поддержки  Организация досуга На территории Белгородской области запущена работа мобильного приложения « Куратор семьи » , предназначенного для семей участников СВО и для семей граждан пострадавших в результате обстрелов со стороны ВСУ . Не упустите возможность получить необходимую поддержку для вашей семьи ! Важно : все услуги предоставляются бесплатно в режиме « одного окна » . напиши выступление для родительского собрания кратко",
+      "gold": [
+        {
+          "start": 1242,
+          "end": 1274,
+          "text": "Белгород , ул . Королева , д . 9"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 1238,
+          "end": 1413,
+          "text": "г . Белгород , ул . Королева , д . 9  Телефон : + 7 ( 4722 ) 55 - 15 - 75 , + 7 ( 4722 ) 52 - 58 - 13  Режим работы : пн - пт с 9 : 00 до 18 : 00 ( перерыв 13 : 00 - 14 : 00",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    },
+    {
+      "source_row": 2815,
+      "text": "Реквизиты для оплаты : ООО « Альфа » , ИНН : 7707083893 . Адрес : г . New Springs , ул . Ленина , д . 1 .",
+      "gold": [
+        {
+          "start": 70,
+          "end": 103,
+          "text": "New Springs , ул . Ленина , д . 1"
+        }
+      ],
+      "predicted": [
+        {
+          "start": 66,
+          "end": 103,
+          "text": "г . New Springs , ул . Ленина , д . 1",
+          "confidence": 0.91,
+          "signals": [
+            "address_cue",
+            "street_marker",
+            "house_marker",
+            "location_marker",
+            "parsed_street",
+            "parsed_house",
+            "unparsed_text"
+          ]
+        }
+      ],
+      "failure_reasons": [
+        "span_includes_context"
+      ]
+    }
+  ],
+  "source": {
+    "dataset": "redmadrobot-rnd/pii_benchmark",
+    "revision": "f77ea831274daf980cc45c61a93c226be9d978d6",
+    "sha256": "6bf544a380a3ee5bec94b946124bea3afaecce49e734679ad0f0c0e7c12977bb"
+  }
+}

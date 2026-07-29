@@ -1,6 +1,31 @@
 # Evaluation
 
-This directory contains an extraction-only legacy regression benchmark.
+This directory measures two separate tasks:
+
+1. **address parsing** after an address string or oracle-cropped window is
+   already available;
+2. **address detection** of half-open address spans inside a free-form message.
+
+Do not use parsing scores as evidence that the package can find addresses in
+arbitrary prose. Do not use the small detection fixture as a production
+accuracy claim.
+
+## What parsing accuracy currently means
+
+The historical regression requires case-insensitive exact component values
+after whitespace and `ё/е` folding. It reports:
+
+- exact-address rate: every public component value matches on one row;
+- no-unparsed rate: no residual word or number spans remain;
+- exact component-value micro precision, recall, and F1;
+- the same exact-value metrics per public field.
+
+RedMadRobot instead uses one-to-one same-label span overlap on gold-cropped
+address windows. Deepparse reports binary span overlap, character overlap,
+token labels, and exact complete sequences. Moscow uses exact component values.
+These metrics and domains are intentionally not interchangeable.
+
+## Historical 500-row regression
 
 `legacy_reference_500.jsonl` is a deterministic SHA-256 selection of 500 unique
 rows from the `Good` worksheet in `ref/references.xlsx`. A row is eligible only
@@ -45,6 +70,105 @@ The evaluator reports precision, recall, and F1 for every public field and keeps
 a bounded failure sample. Gate thresholds are intentionally just below the
 measured deterministic baseline: they prevent regressions but do not establish
 production accuracy.
+
+### Row-level failure diagnostics
+
+Generate the complete 500-row diagnostic table and summary:
+
+```bash
+python evaluation/analyze_failures.py
+```
+
+[`legacy_reference_500_diagnostics.csv`](legacy_reference_500_diagnostics.csv)
+contains one row per test example and explicit columns for:
+
+- expected, actual, and match/missing/extra/wrong status for every field;
+- mismatch, missing, extra, and wrong-value field lists;
+- parser confidence, warnings, alternatives, and unparsed spans;
+- punctuation, Unicode whitespace, marker position, administrative, unit,
+  compound-number, numeric-sequence, ordinal, and repeated-city scenarios;
+- triage priority, failure types, likely causes, and a readable summary.
+
+The likely-cause fields are deterministic hypotheses for triage. They have not
+been independently human-verified and must not be presented as causal ground
+truth. The current summary contains 402 exact rows and 98 non-exact rows.
+Among those failures, 61 involve `street_type`, 25 `house_num`, 21 `apartment`,
+and 20 `street`; one row can contribute to several counts.
+
+The primary heuristic cause partitions all 98 rows:
+
+| Primary likely cause | Rows | Interpretation |
+| --- | ---: | --- |
+| Conflicting street markers | 22 | More than one type marker competes |
+| Reference infers absent street type | 20 | Expected type is not explicit in raw text |
+| Ambiguous/unsupported abbreviation | 15 | `пр.`, `с.`, `ком.`, or a typo needs review |
+| Unmarked numeric-role ambiguity | 14 | Bare numbers can be house/corpus/unit |
+| Compound or letter-number boundary | 7 | Slash, hyphen, or letter suffix is split |
+| Administrative label/boundary | 6 | Adjacent administrative values merge or shift |
+| Street-type recognition | 4 | A visible supported-looking marker is missed |
+| Reference conflicts with numeric marker | 3 | Raw `стр.` conflicts with expected `house_num` |
+| Numeric component not recognized | 3 | House/unit evidence is missed |
+| Four single-row causes | 4 | Label confusion, reference conflict, or span/extra field |
+
+Additional likely-cause tags intentionally overlap—for example, an unmarked
+numeric row can also contain label confusion and a missing apartment. Both the
+primary partition and all secondary tags are retained in the CSV.
+
+[`FAILURE_ANALYSIS.md`](FAILURE_ANALYSIS.md) walks through ten representative
+rows and explains why at least 24 failures require reference adjudication before
+parser optimization.
+
+## Free-form message detection
+
+`detection_reference.jsonl` contains 30 deliberately narrow positive and
+negative messages. Every row records the message, exact expected substrings,
+scenario family, context style, address style, boundary style, polarity,
+ambiguity, and notes.
+
+Run:
+
+```bash
+python evaluation/evaluate_detection.py
+```
+
+The current conservative detector exactly matches all 20 annotated address
+spans and returns no span for all 12 negative messages. That is 100% on this
+small authored regression fixture only. It is not independent or large enough
+for an accuracy claim. The next meaningful detector benchmark should annotate
+complete, representative messages—including hard negatives—without
+oracle-cropping.
+
+An additional diagnostic runs the detector on all 2,841 complete reconstructed
+RedMadRobot messages rather than gold-cropped snippets:
+
+```bash
+python evaluation/evaluate_redmadrobot_detection.py \
+  --data .cache/external/redmadrobot-pii-benchmark-f77ea831.csv
+```
+
+Only gold clusters containing both `STREET` and `HOUSE` are address positives.
+The current development snapshot has 144 such gold spans in 135 messages:
+
+| Detection metric | Result |
+| --- | ---: |
+| Any-overlap precision | 98.0% |
+| Any-overlap recall | 68.1% |
+| Any-overlap F1 | 80.3% |
+| Exact-boundary F1 | 23.8% |
+| Negative-message specificity | 100.0% |
+
+Exact-boundary scoring is much lower because the BIO gold span and detector
+have different boundary policies—for example, one may include a city or
+country while the other returns the parseable street/building/unit substring.
+The complete diagnostic contains 107 non-exact messages: 44 missed-address,
+33 context-inclusion, 33 dropped-gold-text, and one spurious-address tag.
+Tags overlap.
+
+These failures were inspected while developing the detector, so this
+RedMadRobot detection report is now a development diagnostic, not a sealed
+final test. A production claim needs a new untouched message-level benchmark
+whose annotation policy explicitly defines optional city, postcode, country,
+person-name, and trailing-unit boundaries.
 
 ## Independent external benchmark
 

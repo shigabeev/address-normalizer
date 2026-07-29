@@ -1,0 +1,170 @@
+{
+  "dataset": "legacy_reference_500",
+  "rows": 500,
+  "exact_rows": 402,
+  "failed_rows": 98,
+  "diagnostic_semantics": "likely_causes are deterministic triage hypotheses and require human review; they are not causal ground truth",
+  "failure_rows_by_likely_cause": {
+    "component_label_confusion": 25,
+    "numeric_component_not_recognized": 24,
+    "conflicting_street_markers": 22,
+    "reference_infers_missing_street_type": 20,
+    "ambiguous_or_unsupported_abbreviation": 15,
+    "unmarked_numeric_role_ambiguity": 14,
+    "compound_or_letter_number_boundary": 14,
+    "numeric_value_or_role": 13,
+    "administrative_label_or_boundary": 11,
+    "normalization_only_difference": 7,
+    "street_label_or_value": 7,
+    "street_type_recognition": 7,
+    "street_span_boundary": 6,
+    "administrative_component_missed": 5,
+    "spurious_numeric_component": 5,
+    "reference_conflicts_with_explicit_numeric_marker": 3,
+    "spurious_administrative_component": 2,
+    "reference_conflicts_with_explicit_street_type": 1
+  },
+  "failure_rows_by_primary_likely_cause": {
+    "conflicting_street_markers": 22,
+    "reference_infers_missing_street_type": 20,
+    "ambiguous_or_unsupported_abbreviation": 15,
+    "unmarked_numeric_role_ambiguity": 14,
+    "compound_or_letter_number_boundary": 7,
+    "administrative_label_or_boundary": 6,
+    "street_type_recognition": 4,
+    "reference_conflicts_with_explicit_numeric_marker": 3,
+    "numeric_component_not_recognized": 3,
+    "component_label_confusion": 1,
+    "reference_conflicts_with_explicit_street_type": 1,
+    "spurious_administrative_component": 1,
+    "street_span_boundary": 1
+  },
+  "failure_rows_by_mismatch_field": {
+    "street_type": 61,
+    "house_num": 25,
+    "apartment": 21,
+    "street": 20,
+    "structure": 7,
+    "corpus": 6,
+    "region": 6,
+    "settlement": 5,
+    "city": 5,
+    "district": 2
+  },
+  "scenario_tags_on_failure_rows": {
+    "administrative_expected": 98,
+    "postal_code": 97,
+    "street_marker": 68,
+    "unit_expected": 57,
+    "house_marker": 56,
+    "compact_punctuation": 45,
+    "unit_marker": 42,
+    "street_marker_absent": 30,
+    "street_marker_prefix": 30,
+    "country_phrase": 26,
+    "street_marker_multiple": 22,
+    "street_marker_suffix": 15,
+    "ambiguous_abbreviation": 15,
+    "compound_number": 15,
+    "unmarked_numeric_sequence": 14,
+    "multiword_street": 14,
+    "letter_suffix_number": 12,
+    "repeated_city": 10,
+    "hyphenated_number": 9,
+    "slash_number": 8,
+    "ordinal_street": 3,
+    "street_marker_present_street_not_literal": 1
+  },
+  "representative_failure_sample": [
+    {
+      "id": "legacy-good-0005",
+      "raw": "109052, Москва г, ул.Рязанский проспект, д.2",
+      "mismatch_fields": "street_type",
+      "primary_likely_cause": "conflicting_street_markers",
+      "likely_causes": "conflicting_street_markers",
+      "failure_summary": "street_type: expected='пр-кт', actual='ул'",
+      "unparsed_spans": "[\"г\",\"проспект\"]"
+    },
+    {
+      "id": "legacy-good-0359",
+      "raw": "109651, Российская Федерация, 77 г. Москва, Москва, Батайский проезд, 17, 294",
+      "mismatch_fields": "house_num|apartment",
+      "primary_likely_cause": "unmarked_numeric_role_ambiguity",
+      "likely_causes": "component_label_confusion|numeric_component_not_recognized|numeric_value_or_role|unmarked_numeric_role_ambiguity",
+      "failure_summary": "house_num: expected='17', actual='294'; apartment: expected='294', actual=None",
+      "unparsed_spans": "[\"77\",\"Москва\",\"17\"]"
+    },
+    {
+      "id": "legacy-good-0165",
+      "raw": "142701, Московская область, Ленинский район, г.Видное, пр.Ленинского Комсомола, д.15, корп.2, офис 108",
+      "mismatch_fields": "street_type",
+      "primary_likely_cause": "ambiguous_or_unsupported_abbreviation",
+      "likely_causes": "ambiguous_or_unsupported_abbreviation",
+      "failure_summary": "street_type: expected='пр-кт', actual=None",
+      "unparsed_spans": "[\"пр\"]"
+    },
+    {
+      "id": "legacy-good-0751",
+      "raw": "115682,г.Москва, ул.Ореховый бул.,д.26,корп.2",
+      "mismatch_fields": "street|street_type",
+      "primary_likely_cause": "conflicting_street_markers",
+      "likely_causes": "conflicting_street_markers|street_span_boundary",
+      "failure_summary": "street: expected='Ореховый', actual='Ореховый Бул'; street_type: expected='б-р', actual='ул'",
+      "unparsed_spans": "[]"
+    },
+    {
+      "id": "legacy-good-0089",
+      "raw": "142140, Москва г, Михайлово-Ярцевское п, Исаково д, ул.Исаково-2, д.2",
+      "mismatch_fields": "district|settlement",
+      "primary_likely_cause": "component_label_confusion",
+      "likely_causes": "administrative_component_missed|administrative_label_or_boundary|component_label_confusion",
+      "failure_summary": "district: expected='Михайлово-Ярцевское', actual=None; settlement: expected='Исаково', actual='Михайлово-Ярцевское'",
+      "unparsed_spans": "[\"г\",\"Исаково д\"]"
+    },
+    {
+      "id": "legacy-good-0795",
+      "raw": "119991, г. Москва, Ордынка Б., д. 25, с.1",
+      "mismatch_fields": "street|street_type|structure",
+      "primary_likely_cause": "ambiguous_or_unsupported_abbreviation",
+      "likely_causes": "ambiguous_or_unsupported_abbreviation|normalization_only_difference|numeric_component_not_recognized",
+      "failure_summary": "street: expected='Ордынка Б.', actual='Ордынка Б'; street_type: expected='ул', actual=None; structure: expected='1', actual=None",
+      "unparsed_spans": "[\"с.1\"]"
+    },
+    {
+      "id": "legacy-good-0006",
+      "raw": "105066, г. Москва Денисовский переулок, д.9",
+      "mismatch_fields": "city|street|street_type",
+      "primary_likely_cause": "administrative_label_or_boundary",
+      "likely_causes": "administrative_label_or_boundary|street_label_or_value|street_type_recognition",
+      "failure_summary": "city: expected='Москва', actual='Москва Денисовский'; street: expected='Денисовский', actual='Переулок'; street_type: expected='пер', actual=None",
+      "unparsed_spans": "[]"
+    },
+    {
+      "id": "legacy-good-0935",
+      "raw": "115201, г. Москва, Котляковская, 4",
+      "mismatch_fields": "street_type",
+      "primary_likely_cause": "reference_infers_missing_street_type",
+      "likely_causes": "reference_infers_missing_street_type",
+      "failure_summary": "street_type: expected='ул', actual=None",
+      "unparsed_spans": "[]"
+    },
+    {
+      "id": "legacy-good-0029",
+      "raw": "117574, г. Москва, ул. Одоевского, д. 3, корп. 7",
+      "mismatch_fields": "street_type",
+      "primary_likely_cause": "reference_conflicts_with_explicit_street_type",
+      "likely_causes": "reference_conflicts_with_explicit_street_type",
+      "failure_summary": "street_type: expected='пр-д', actual='ул'",
+      "unparsed_spans": "[]"
+    },
+    {
+      "id": "legacy-good-0036",
+      "raw": "140083, Московская область, г. Лыткарино, ул. Парковая, стр. 4А.",
+      "mismatch_fields": "house_num|structure",
+      "primary_likely_cause": "reference_conflicts_with_explicit_numeric_marker",
+      "likely_causes": "component_label_confusion|compound_or_letter_number_boundary|reference_conflicts_with_explicit_numeric_marker|spurious_numeric_component",
+      "failure_summary": "house_num: expected='4А', actual=None; structure: expected=None, actual='4А'",
+      "unparsed_spans": "[]"
+    }
+  ]
+}

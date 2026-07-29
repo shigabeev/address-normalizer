@@ -21,8 +21,9 @@ service, or database.
 - Supported Python declared in package metadata: 3.10 through 3.14.
 - Runtime dependencies: none.
 - Public entry points: `parse()`, `parse_many()`, lazy `parse_iter()`,
-  `ParsedAddress`, `AddressPart`, `Alternative`, and the matching serialized
-  `TypedDict` schemas.
+  conservative `detect_addresses()`, `ParsedAddress`, `DetectedAddress`,
+  `AddressPart`, `Alternative`, and the matching serialized `TypedDict`
+  schemas.
 - CLI: one-address JSON and stdin JSONL modes.
 - Runtime model: 37,130-byte JSON linear-chain tagger.
 - Baseline wheel reported before this sprint: approximately 23 KB.
@@ -131,6 +132,10 @@ For the v2 pre-release series:
 - `parse_iter(addresses: Iterable[str]) -> Iterator[ParsedAddress]` preserves
   order, consumes once, avoids preloading, and raises element errors when
   iteration reaches them.
+- `detect_addresses(text: str) -> tuple[DetectedAddress, ...]` returns ordered,
+  non-overlapping half-open spans in a free-form message. Detection is
+  conservative and requires a street marker plus a building, or an explicit
+  address cue plus a parseable street and building.
 - Empty and whitespace-only strings return a valid empty `ParsedAddress`; they
   do not invent components.
 - `AddressPart.raw == ParsedAddress.raw[start:end]`; offsets are half-open
@@ -301,7 +306,7 @@ Maintainer decisions still required:
 Recorded on 2026-07-28:
 
 - Unit suite: 59 tests passed independently on locally available Python 3.10,
-  3.13, and 3.14 interpreters. CI covers 3.10, 3.11, 3.12, 3.13, and 3.14.
+  3.13, and 3.14 interpreters. CI covers 3.10 through 3.14.
 - Strict `mypy==1.17.1`: success on all eight public package modules.
 - Compact tagger: deterministic regeneration was byte-identical; the model is
   37,130 bytes with SHA-256
@@ -330,3 +335,27 @@ Recorded on 2026-07-28:
 
 Committed benchmark baselines must not be rewritten merely to make a change
 look successful. Timing-only fields may vary when the reports are reproduced.
+
+Detection and diagnostics addendum, recorded on 2026-07-29:
+
+- `detect_addresses()` adds conservative, offset-preserving message-span
+  detection without changing parser output on the historical regression.
+- The detection behavior fixture contains 30 narrow messages: 18 positive and
+  12 negative, with 20 exact address spans. All currently pass, but this
+  authored fixture is not an independent accuracy benchmark.
+- The historical diagnostic table contains all 500 rows and more than 75
+  columns covering per-field outcomes, scenario dimensions, warnings,
+  unparsed evidence, and heuristic triage causes. It records 402 exact and 98
+  non-exact rows.
+- Unit tests pass on locally available Python 3.10, 3.13, and 3.14: 74 passed
+  per interpreter. Strict `mypy==1.17.1` passes all nine package modules.
+- The historical parsing gate remains unchanged at 80.4% exact-address match,
+  76.8% no-unparsed rate, and 95.8538% exact component micro F1.
+- On complete RedMadRobot messages, the development-only detector diagnostic
+  reports 98.0% any-overlap precision, 68.1% recall, 80.3% F1, and 100%
+  negative-message specificity. Its failures were inspected, so it is not a
+  sealed final-test result.
+- The reproducible wheel is now 33,104 bytes with SHA-256
+  `15f38aa4dde86da620d05d4e8e620624769b26430c7b365b9f62d2575c87c8ed`;
+  the sdist is 52,762 bytes with SHA-256
+  `e45303316773c560473e16e12fe2f574967d4593cf3d0b7c778d7fa9a3d7dda3`.

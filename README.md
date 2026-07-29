@@ -76,11 +76,12 @@ the wheel under the ignored `.cache/external/` directory.
 | Your need | Fit |
 | --- | --- |
 | Extract Russian address fields in an offline Python process | **Yes** |
+| Conservatively locate marked street/building spans in messages | **Yes** |
 | Preserve raw substrings, offsets, warnings, and alternatives | **Yes** |
 | Feed structured candidates into your own resolver | **Yes** |
 | Verify current address existence or get a FIAS/GAR ID | **No—add a resolver** |
 | Geocode, transliterate, or correct official spelling | **No** |
-| Parse arbitrary prose before locating the address span | **Not by itself** |
+| Detect every implicit or markerless address in arbitrary prose | **No** |
 | Require uniformly strong administrative-field extraction | **Not yet** |
 
 The current evidence supports conventional street/building extraction better
@@ -91,18 +92,20 @@ before setting automation policy.
 
 ```mermaid
 flowchart LR
-    A["Source text"] --> B["Offset-preserving tokenizer"]
-    B --> C["Postcode and numeric grammar"]
-    C --> D["Explicit marker rules"]
-    D --> E["Tiny sequence tagger for residual text"]
-    E --> F["Deterministic post-processing"]
-    F --> G["ParsedAddress"]
-    G --> H["Application review policy"]
-    H --> I["Customer-managed FIAS/GAR resolver"]
+    A["Address string"] --> C["Offset-preserving tokenizer"]
+    M["Free-form message"] --> B["Conservative span detector"]
+    B --> A
+    C --> D["Postcode and numeric grammar"]
+    D --> E["Explicit marker rules"]
+    E --> F["Tiny sequence tagger for residual text"]
+    F --> G["Deterministic post-processing"]
+    G --> H["ParsedAddress"]
+    H --> I["Application review policy"]
+    I --> J["Customer-managed FIAS/GAR resolver"]
 ```
 
-The parser itself ends at `ParsedAddress`. The review and resolver boxes are
-application responsibilities; the resolver is never contacted by the package.
+Direct address strings can skip detection. The parser itself ends at
+`ParsedAddress`; review and resolution remain application responsibilities.
 
 ## API reference
 
@@ -114,8 +117,11 @@ from address_normalizer import (
     AddressPartDict,
     Alternative,
     AlternativeDict,
+    DetectedAddress,
+    DetectedAddressDict,
     ParsedAddress,
     ParsedAddressDict,
+    detect_addresses,
     parse,
     parse_iter,
     parse_many,
@@ -141,6 +147,32 @@ Use it for unbounded files or streams, as shown in
 [`examples/jsonl_etl.py`](https://github.com/shigabeev/address-normalizer/blob/master/examples/jsonl_etl.py).
 `parse_many()` and `parse_iter()` reject a bare string so it cannot be mistaken
 for a batch; a non-string element raises `TypeError` when iteration reaches it.
+
+### `detect_addresses(text: str) -> tuple[DetectedAddress, ...]`
+
+Locates conservative address candidates inside a free-form message. A candidate
+normally needs a street marker plus a building number, or an explicit
+`адрес:` cue plus a parseable street and building. This avoids treating every
+place name or number as an address.
+
+```python
+from address_normalizer import detect_addresses
+
+message = (
+    "Курьер приедет по адресу: Москва, ул. Тверская, "
+    "д. 13, кв. 4. Позвоните."
+)
+
+for detected in detect_addresses(message):
+    assert message[detected.start:detected.end] == detected.text
+    print(detected.span, detected.text)
+    print(detected.parsed.as_dict())
+```
+
+`DetectedAddress.span` indexes the original message. Component offsets inside
+`DetectedAddress.parsed` index the extracted `DetectedAddress.text`. Detection
+confidence is decision strength, not a probability or registry verification.
+Multiple non-overlapping addresses are returned in message order.
 
 ### Result types
 
@@ -255,6 +287,14 @@ domains and matching rules, and the results must not be averaged:
 | Deepparse nationwide clean strings | 100,000 rows | same-label character-overlap F1 | 66.2% | Registry-derived clean strings with a different token schema |
 | Moscow official clean buildings | 15,196 rows | exact component-value micro F1 | 85.4% | Moscow-only October 2021 snapshot |
 
+Message-span detection is measured separately. On complete RedMadRobot messages,
+the current development diagnostic reports 98.0% any-overlap precision, 68.1%
+recall, and 80.3% F1 for gold windows containing both `STREET` and `HOUSE`.
+Those detector failures were inspected during development, so this is not a
+sealed final-test result. Exact-boundary F1 is only 23.8% because gold and
+detector boundary policies frequently disagree about surrounding city,
+postcode, country, and marker text.
+
 Metric names matter:
 
 - **exact component micro F1** pools true/false positive and negative component
@@ -299,8 +339,9 @@ dependencies and downloads. They never become runtime dependencies.
 - Hyphenated and unmarked numeric tails can remain genuinely ambiguous.
 - Normalization is deliberately light; it is not official-spelling correction.
 - Confidence is not a probability and has not been calibrated across domains.
-- The parser expects an address string or already located address window, not
-  arbitrary documents containing an unknown address span.
+- Detection deliberately misses unmarked address-like text without an
+  `адрес:` cue and marked streets without a building. Its committed 30-message
+  fixture is a behavior regression set, not a production accuracy benchmark.
 - The current package version is an alpha, and its license/provenance decision
   is still a release blocker.
 

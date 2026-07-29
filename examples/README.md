@@ -19,6 +19,16 @@ python examples/basic.py "г. Москва, ул. Тверская, д.4, кв.1
 The program prints the full JSON-compatible result followed by its review
 decision.
 
+## Address span in a message
+
+```bash
+python examples/detect_in_message.py
+```
+
+The detector returns ordered half-open spans into the original message and a
+`ParsedAddress` for each span. It deliberately requires strong address evidence
+and does not treat every place name or number as an address.
+
 ## Streaming ETL
 
 Each input line is treated as one raw address. Each output line is one JSON
