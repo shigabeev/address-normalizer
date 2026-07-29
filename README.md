@@ -8,7 +8,7 @@
 ## Установка
 
 ```bash
-python -m pip install --pre address-normalizer
+python -m pip install address-normalizer
 ```
 
 ## Использование
