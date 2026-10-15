@@ -67,6 +67,43 @@ def test_adversarial_address_shapes(raw, expected):
         assert raw[part.start : part.end] == part.raw
 
 
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        (
+            "ул. Б. Хмельницкого 13/2, кв. 41, г. Москва",
+            {
+                "city": "Москва",
+                "street": "Б. Хмельницкого",
+                "house_num": "13/2",
+                "apartment": "41",
+            },
+        ),
+        (
+            "ул. Тверская 13а, кв. 41",
+            {"street": "Тверская", "house_num": "13А", "apartment": "41"},
+        ),
+        (
+            "ул. Тверская 13а/2, стр. 1",
+            {"street": "Тверская", "house_num": "13А/2", "structure": "1"},
+        ),
+        (
+            "Тверская 13/2 корп 1",
+            {"street": "Тверская", "house_num": "13/2", "corpus": "1"},
+        ),
+    ],
+)
+def test_unmarked_compound_house_before_unit_marker_stays_whole(raw, expected):
+    result = parse(raw)
+
+    assert {field: _value(result, field) for field in expected} == expected
+    assert result.unparsed == ()
+    for field in expected:
+        part = getattr(result, field)
+        assert part is not None
+        assert raw[part.start : part.end] == part.raw
+
+
 @pytest.mark.parametrize("raw", ["Тверская, 5-30", "ул. Тверская, д. 5-30"])
 def test_ambiguous_numeric_tail_keeps_both_interpretations(raw):
     result = parse(raw)
