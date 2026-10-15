@@ -63,6 +63,10 @@ _PLAIN_HOUSE_TAIL_RE = re.compile(
     rf"(?<![\w/])(?P<value>{_SLASH_NUMBER})\s*[,.]?\s*$",
     re.IGNORECASE,
 )
+_BARE_HOUSE_RE = re.compile(
+    rf"(?<![\w/]){_HOUSE_NUMBER}(?!\w)",
+    re.IGNORECASE,
+)
 
 _MARKER_RE = re.compile(
     r"(?<!\w)(?P<marker>"
@@ -570,15 +574,26 @@ class AddressParser:
         if not any(name in components for name in ("corpus", "structure", "apartment")):
             return
         token = candidates[-1]
+        start, end = token.start, token.end
+        # Keep compound numbers such as 13/2 or 13а whole; otherwise the last
+        # digit run becomes the house and the rest leaks into the street.
+        for match in _BARE_HOUSE_RE.finditer(text):
+            if match.start() <= start and end <= match.end():
+                if not (
+                    _overlaps(match.start(), match.end(), consumed)
+                    or re.search(r"\d{6}", match.group())
+                ):
+                    start, end = match.span()
+                break
         components["house_num"] = _part(
             text,
-            token.start,
-            token.end,
+            start,
+            end,
             confidence=0.86,
             source="postprocessor",
             normalizer=normalize_number,
         )
-        consumed.append((token.start, token.end))
+        consumed.append((start, end))
 
     def _extract_with_model(
         self,
